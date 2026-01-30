@@ -1,9 +1,9 @@
 {
     "footerMenu": [
-        { "label": "Home", "path": "#hero" },
-        { "label": "Chi Siamo", "path": "#about" },
-        { "label": "Partner", "path": "#partners" },
-        { "label": "Tornei", "path" : "events"}
+        { "label": "Home", "path": "/" },
+        { "label": "Chi Siamo", "path": "/#about" },
+        { "label": "Partner", "path": "/#partners" },
+        { "label": "Tornei", "path" : "/events"}
     ],
     "socialLinks": [
         { 
