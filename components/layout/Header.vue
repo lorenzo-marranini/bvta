@@ -95,7 +95,7 @@ const { scrollToElement } = useScrollTo()
 // NOTA: Qui ho messo gli slash "/" davanti ai link con cancelletto #
 const menuItems = [
   { label: 'Home', path: '/' },
-  { label: 'Tornei', path: '/events' },
+  { label: 'Eventi', path: '/#events' },
   { label: 'Partner', path: '/#partners' },
   { label: 'Chi Siamo', path: '/#about' },
   { label: 'Contatti', path: '/#contact' }

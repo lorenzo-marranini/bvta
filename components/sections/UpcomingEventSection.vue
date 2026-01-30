@@ -33,7 +33,8 @@
               color="primary"
               variant="soft"
               class="w-full bg-primary text-white hover:bg-primary-dark hover:text-white transition-colors duration-300"
-            >
+              :to="'/events/'+event.slug"
+              >
               {{ content.button.text }}
             </UButton>
           </div>

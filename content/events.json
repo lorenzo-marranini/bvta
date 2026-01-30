@@ -6,24 +6,39 @@
   "events": [
     {
       "id": 1,
-      "title": "Torneo Estivo 2025",
-      "date": "15 Giugno 2024",
-      "description": "Partecipa al più grande torneo di beach volley della stagione. Premi e divertimento assicurato per tutti i partecipanti.",
-      "imageUrl": "https://images.unsplash.com/photo-1531346878377-a5be20888e57?q=80&w=2070"
+      "slug": "torneo-apertura-2026", 
+      "type": "torneo",  
+      "title": "Torneo di Apertura Stagione 2026",
+      "date": "25 Aprile 2026",
+      "category": "2x2 Maschile / Femminile",
+      "location": "Bagno Tirrenia",
+      "signupLink": "https://forms.google.com/...",
+      "description": "Partecipa al più grande torneo...",
+      "imageUrl": "/eventImages/BagnoLomi.jpg"
     },
     {
       "id": 2,
+      "slug": "beach-camp-luglio",
+      "type": "camp", 
       "title": "Beach Volley Camp",
-      "date": "1-7 Luglio 2024", 
-      "description": "Una settimana intensiva di allenamento con i migliori coach nazionali. Perfetto per migliorare la tua tecnica.",
-      "imageUrl": "https://images.unsplash.com/photo-1531346878377-a5be20888e57?q=80&w=2070"
+      "date": "1-7 Luglio 2024",
+      "category": "Open - Tutti i livelli",
+      "location": "Bagno Tirrenia",
+      "signupLink": "https://forms.google.com/...", 
+      "description": "Una settimana intensiva...",
+      "imageUrl": "/eventImages/Gughina.jpg"
     },
     {
       "id": 3,
+      "slug": "gughina",
+      "type": "torneo", 
       "title": "Gughina",
       "date": "20 Luglio 2024",
-      "description": "Torneo al tramonto seguito da beach party. Un evento unico che combina sport e divertimento.",
-      "imageUrl": "https://images.unsplash.com/photo-1531346878377-a5be20888e57?q=80&w=2070"
+      "category": "Misto 2x2 Giallo",
+      "location": "Bagno degli Americani",
+      "signupLink": "https://forms.google.com/...",
+      "description": "Torneo al tramonto...",
+      "imageUrl": "/eventImages/Gughina.jpg"
     }
   ]
-} 
+}
