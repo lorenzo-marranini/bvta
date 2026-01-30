@@ -24,7 +24,6 @@
           </UButton>
         </nav>
 
-        <!-- Mobile Menu Button -->
         <UButton
           class="md:hidden relative w-10 h-10"
           color="gray"
@@ -35,11 +34,7 @@
             <div class="w-6 h-5 relative">
               <span 
                 class="absolute w-full h-0.5 bg-current transform transition-all duration-300 ease-in-out"
-                :class="[
-                  isMenuOpen 
-                    ? 'rotate-45 top-2' 
-                    : 'rotate-0 top-0'
-                ]"
+                :class="[isMenuOpen ? 'rotate-45 top-2' : 'rotate-0 top-0']"
               ></span>
               <span 
                 class="absolute w-full h-0.5 bg-current transform transition-all duration-300 ease-in-out top-2"
@@ -47,18 +42,13 @@
               ></span>
               <span 
                 class="absolute w-full h-0.5 bg-current transform transition-all duration-300 ease-in-out"
-                :class="[
-                  isMenuOpen 
-                    ? '-rotate-45 top-2' 
-                    : 'rotate-0 top-4'
-                ]"
+                :class="[isMenuOpen ? '-rotate-45 top-2' : 'rotate-0 top-4']"
               ></span>
             </div>
           </div>
         </UButton>
       </div>
 
-      <!-- Mobile Menu -->
       <Transition
         enter-active-class="transition duration-200 ease-out"
         enter-from-class="transform -translate-y-2 opacity-0"
@@ -90,36 +80,55 @@
 
 <script setup>
 import { useWindowScroll } from '@vueuse/core'
-import gsap from 'gsap'
 import { useScrollTo } from '~/composables/useScrollTo'
 import { ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
+const route = useRoute()
+const router = useRouter()
 const header = ref(null)
 const isMenuOpen = ref(false)
 const lastScrollPosition = ref(0)
 const { y: scrollY } = useWindowScroll()
 const { scrollToElement } = useScrollTo()
 
+// NOTA: Qui ho messo gli slash "/" davanti ai link con cancelletto #
 const menuItems = [
-  { label: 'Home', path: '#hero' },
-  { label: 'Partner', path: '#partners' },
-  { label: 'Chi Siamo', path: '#about' },
-  { label: 'Contatti', path: '#contact' }
+  { label: 'Home', path: '/' },
+  { label: 'Tornei', path: '/events' },
+  { label: 'Partner', path: '/#partners' },
+  { label: 'Chi Siamo', path: '/#about' },
+  { label: 'Contatti', path: '/#contact' }
 ]
 
-const handleNavClick = (path, event) => {
-  // Previeni il comportamento predefinito del link
-  event.preventDefault()
-  
+const handleNavClick = async (path, event) => {
   isMenuOpen.value = false
-  if (path.startsWith('#')) {
-    scrollToElement(path)
+
+  // Se è un'ancora (es. /#partners o #partners)
+  if (path.includes('#')) {
+    event.preventDefault()
+    
+    // Prendi solo la parte dopo il # (es. "partners")
+    const sectionId = path.substring(path.indexOf('#') + 1)
+    const targetHash = '#' + sectionId
+
+    if (route.path === '/') {
+      // Se siamo già in home, scorri subito
+      scrollToElement(targetHash)
+    } else {
+      // Se siamo in un'altra pagina (es. Tornei), vai in Home e poi scorri
+      await router.push('/')
+      // Diamo un attimo di tempo alla home di caricarsi
+      setTimeout(() => {
+        scrollToElement(targetHash)
+      }, 100)
+    }
   }
+  // Se è un link normale (es. /tornei), Nuxt farà il cambio pagina in automatico
 }
 
 watch(scrollY, (newY) => {
   if (isMenuOpen.value) return
-  
   lastScrollPosition.value = newY
 })
 </script>

@@ -61,9 +61,14 @@ const socialLinks = ref(footerContent.socialLinks)
 
 
 const handleNavClick = (path, event) => {
-  event.preventDefault()
-  if (path.startsWith('#')) {
-    scrollToElement(path)
+  // Se è un'ancora, blocca e scorri
+  if (path.startsWith('#') || path.includes('#')) {
+    event.preventDefault()
+    // Qui potresti dover gestire il ritorno alla home come nell'header,
+    // ma per ora assicuriamoci che i link normali funzionino.
+    if (path.startsWith('#')) scrollToElement(path)
   }
+  // Se è un link normale (es. /tornei), NON fare nulla, così cambia pagina.
 }
+
 </script>
