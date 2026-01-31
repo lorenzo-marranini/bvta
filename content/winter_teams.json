@@ -10,8 +10,7 @@
       "photoUrl": "/teamImages/team_1.jpeg",
       "players": ["Valerio Imbriolo", "Luca Morelli","Davide Seminara","Iacopo Ghilardi","Carlo Macchia","Gianluca Antonelli"],
       "results": [
-        { "day": "1ª Tappa", "placement": "1° Posto" },
-        { "day": "2ª Tappa", "placement": "2° Posto" }
+        { "day": "1ª Tappa", "placement": "2° Posto" }
       ]
     },
     {
@@ -21,8 +20,7 @@
       "photoUrl": "/teamImages/team_2.jpeg",
       "players": ["Cosimo Balducci", "Matteo Codiglione", "Gabriele Cecchi","Benedetto Marrazzo","Renato Kouakou","Lorenzo Mangoni"],
       "results": [
-        { "day": "1ª Tappa", "placement": "3° Posto" },
-        { "day": "2ª Tappa", "placement": "1° Posto" }
+        { "day": "1ª Tappa", "placement": "4° Posto" }
       ]
     },
     {
@@ -32,10 +30,7 @@
       "photoUrl": "/teamImages/team_3.jpeg",
       "players": ["Paolo Salini", "Daniele Giannattasio","Matteo Spinetti","Giuseppe Castiglione","Simone Bonetti","Gianmarco Carlà"],
       "results": [
-        { "day": "1ª Tappa", "placement": "2° Posto" },
-        { "day": "2ª Tappa", "placement": "4° Posto" },
-        { "day": "3ª Tappa", "placement": "4° Posto" },
-        { "day": "4ª Tappa", "placement": "4° Posto" }
+        { "day": "1ª Tappa", "placement": "4° Posto" }
       ]
     },
     {
@@ -46,19 +41,18 @@
       "players": ["Michelle De Rosa", "Benedetta Alestra","Matilde Fulceri","Irene Puleo","Irene Trusendi"],
       "coach":"Claudia Puccinelli",
       "results": [
-        { "day": "1ª Tappa", "placement": "4° Posto" },
-        { "day": "2ª Tappa", "placement": "3° Posto" }
+        { "day": "1ª Tappa", "placement": "2° Posto" },
+        { "day": "2ª Tappa", "placement": "1° Posto" }
       ]
     },
     {
       "id": 5,
-      "name": "BVTA BRIAI",
-      "category": "Promozione Maschile",
+      "name": "BVTA ROSSA",
+      "category": "Eccellenza Maschile",
       "photoUrl": "/teamImages/team_5.jpeg",
-      "players": ["Brunelli", "Marco Picanza","Caramelli","Irene Puleo","Irene Trusendi","Andrea Bocelli"],
+      "players": ["Luca Brunelli", "Marco Picanza","Giacomo Caramelli","Luca Martellotta","Adriano Guiggi","Andrea Benedetti"],
       "results": [
-        { "day": "1ª Tappa", "placement": "4° Posto" },
-        { "day": "2ª Tappa", "placement": "3° Posto" }
+        { "day": "1ª Tappa", "placement": "5° Posto" }
       ]
     }
   ]

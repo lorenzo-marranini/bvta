@@ -98,6 +98,7 @@ const menuItems = [
   { label: 'Eventi', path: '/events' },
   { label: 'Strutture', path: '/strutture' },
   { label: 'Stagione Invernale', path: '/stagioneinvernale' },
+  { label: 'Shop', path: '/shop' },
   { label: 'Contatti', path: '/#contact' }
 ]
 
