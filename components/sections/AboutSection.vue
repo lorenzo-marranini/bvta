@@ -35,7 +35,7 @@
                 La Beach Volley Tirrenia Academy (BVTA) nasce nel 2024, frutto dell'esperienza e della visione condivisa di un gruppo di amici uniti da una profonda passione per la sabbia. Quella che è iniziata come una piccola associazione sportiva si è evoluta rapidamente in un punto di riferimento per il beach volley sul litorale pisano, trasformando l'entusiasmo in una struttura organizzativa solida e professionale.
               </p>
             </div>
-
+            <div></div>
             <div class="space-y-3">
               <h3 class="text-xl font-bold text-white border-l-4 border-primary pl-3">
                 La Nostra Missione
