@@ -1,5 +1,5 @@
 <template>
-  <section class="pt-24 pb-12 overflow-hidden bg-background-primary">
+  <section ref="sectionRef" class="pt-24 pb-12 overflow-hidden bg-background-primary">
     <UContainer>
       <div class="grid md:grid-cols-2 gap-12 items-start px-4 md:px-0">
         
@@ -46,7 +46,6 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-              
               <div class="bg-white/5 border border-white/10 rounded-xl p-5 hover:border-primary/50 transition-colors duration-300 group">
                 <div class="flex items-center gap-3 mb-3">
                   <div class="p-2 bg-orange-500/20 rounded-lg text-orange-400 group-hover:text-orange-300 transition-colors">
@@ -72,7 +71,6 @@
                   <span class="text-white font-bold">5° e 9° posto</span> nazionale.
                 </p>
               </div>
-
             </div>
 
           </div>
@@ -91,6 +89,8 @@ import aboutImage from '~/assets/images/about.jpg'
 
 gsap.registerPlugin(ScrollTrigger)
 
+// Riferimenti agli elementi DOM
+const sectionRef = ref(null) // NUOVO: Riferimento all'intera sezione
 const imageWrapperRef = ref(null)
 const shapeRef = ref(null)
 const titleRef = ref(null)
@@ -104,13 +104,15 @@ const content = ref({
 onMounted(() => {
   const tl = gsap.timeline({
     scrollTrigger: {
-      trigger: imageWrapperRef.value,
-      start: 'top 85%',
-      toggleActions: 'play none none reverse'
+      trigger: sectionRef.value, // MODIFICA FONDAMENTALE: Trigger sulla sezione intera, non sulla foto
+      start: 'top 75%',          // Parte quando la sezione entra bene nello schermo
+      toggleActions: 'play none none none' // MODIFICA: 'none' finale impedisce il reverse (non scompare scrollando su)
     }
   })
 
-  // 1. Immagine
+  // Le animazioni partono tutte insieme ma con leggero ordine logico
+  
+  // 1. Immagine (Appare)
   tl.from(imageWrapperRef.value, {
     opacity: 0,
     x: -30,
@@ -118,7 +120,7 @@ onMounted(() => {
     ease: 'power3.out'
   })
   
-  // 2. Forma Decorativa (Parte INSIEME all'immagine grazie a '<')
+  // 2. Forma (Insieme alla foto)
   .from(shapeRef.value, {
     opacity: 0,
     x: -30,
@@ -126,7 +128,7 @@ onMounted(() => {
     ease: 'power3.out'
   }, '<') 
 
-  // 3. Titolo (Parte appena 0.1s dopo l'inizio dell'immagine, quindi quasi subito)
+  // 3. Titolo (Insieme alla foto)
   .from(titleRef.value, {
     opacity: 0,
     y: 20,
@@ -134,12 +136,12 @@ onMounted(() => {
     ease: 'power3.out'
   }, '<0.1')
 
-  // 4. Contenuti (Parte appena 0.2s dopo l'inizio, quindi quasi subito)
+  // 4. Testi (Insieme alla foto, cascata veloce)
   .from(contentRef.value.children, {
     opacity: 0,
     y: 20,
     duration: 0.5,
-    stagger: 0.05, // Cascata velocissima tra i paragrafi
+    stagger: 0.05, 
     ease: 'power3.out',
     clearProps: 'all'
   }, '<0.2')

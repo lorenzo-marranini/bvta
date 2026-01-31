@@ -60,18 +60,7 @@
                 </ul>
               </div>
 
-              <UButton
-                :to="location.mapLink"
-                target="_blank"
-                lock
-                color="gray"
-                variant="solid"
-                class="text-white bg-primary  font-bold hover:bg-primary-dark hover:text-white transition-colors duration-300"
-                icon="i-heroicons-arrow-top-right-on-square"
-              >
-                Vedi su Mappa
-              </UButton>
-
+            
             </div>
           </div>
         </div>

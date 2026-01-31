@@ -8,7 +8,7 @@
           <p class="text-xl text-gray-500">{{ pageContent.subtitle }}</p>
         </div>
 
-        <div class="max-w-5xl mx-auto space-y-6">
+        <div class="max-w-5xl mx-auto flex flex-col gap-6 sm:gap-8">
           
           <div 
             v-for="team in teamsList" 
