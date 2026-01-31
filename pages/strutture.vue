@@ -8,7 +8,7 @@
           <p class="text-xl text-gray-500">{{ content.description }}</p>
         </div>
 
-        <div class="space-y-24">
+        <div class="flex flex-col gap-16 sm:gap-24">
           <div 
             v-for="(location, index) in content.locations" 
             :key="location.id"
