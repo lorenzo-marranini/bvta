@@ -1,7 +1,10 @@
 <template lang="">
     <Main>
         <HeroSection id="hero" />
-        <UpcomingEventSection id="events" />
+        <UpcomingEventSection 
+            v-if="hasUpcomingEvents" 
+            id="events" 
+        />
         <PartnersSection id="partners" />
         <AboutSection id="about" />
         <StatsSection id="stats" />

@@ -3,7 +3,8 @@
   "button": {
     "text": "Scopri di più"
   },
-  "events": [
+  "events": [],
+  "disabled_events":[
     {
       "id": 1,
       "slug": "torneo-apertura-2026", 
