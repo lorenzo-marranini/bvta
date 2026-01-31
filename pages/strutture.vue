@@ -12,12 +12,11 @@
           <div 
             v-for="(location, index) in content.locations" 
             :key="location.id"
-            class="flex flex-col lg:flex-row gap-12 items-center"
+            class="flex flex-col lg:flex-row gap-6 lg:gap-12 items-center" 
             :class="{ 'lg:flex-row-reverse': index % 2 !== 0 }"
           >
-            
             <div class="w-full lg:w-1/2">
-              <div class="relative rounded-2xl overflow-hidden shadow-2xl group h-[400px]">
+              <div class="relative rounded-2xl overflow-hidden shadow-2xl group h-64 sm:h-[400px]">
                 <img 
                   :src="location.imageUrl" 
                   :alt="location.name"
