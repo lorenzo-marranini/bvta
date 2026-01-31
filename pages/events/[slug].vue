@@ -3,9 +3,12 @@
     <div v-if="event" class="pt-32 pb-16 min-h-screen bg-gray-50">
       <UContainer>
         
-        <NuxtLink to="/#events" class="inline-flex items-center text-gray-500 hover:text-primary mb-8 transition-colors font-medium">
+        <NuxtLink 
+          :to="'/events'" 
+          class="inline-flex items-center text-gray-500 hover:text-primary mb-8 transition-colors font-medium"
+        >
           <UIcon name="i-heroicons-arrow-left" class="mr-2" />
-          Torna agli eventi
+          {{'Torna agli Eventi'}}
         </NuxtLink>
 
         <div class="bg-white rounded-2xl shadow-xl overflow-hidden max-w-5xl mx-auto">
@@ -14,10 +17,13 @@
             <img 
               :src="event.imageUrl" 
               :alt="event.title" 
-              class="w-full h-full object-cover transition-transform duration-700 "
+              class="w-full h-full object-cover transition-transform duration-700"
             />
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
             <div class="absolute bottom-0 left-0 p-6 md:p-10 text-white w-full">
+              <div v-if="isPastEvent" class="inline-block px-3 py-1 bg-primary text-white text-xs font-bold rounded-full mb-3 uppercase tracking-wider">
+                Evento Concluso
+              </div>
               <h1 class="text-3xl md:text-5xl font-bold mb-2 leading-tight shadow-sm">{{ event.title }}</h1>
             </div>
           </div>
@@ -62,39 +68,72 @@
                     </div>
                   </div>
                 </div>
+
+                <div v-if="isPastEvent && event.galleryImages && event.galleryImages.length > 0" class="mt-8 pt-8 border-t border-gray-100">
+                  <h3 class="text-xl font-bold text-gray-900 mb-4">I momenti migliori</h3>
+                  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    <div 
+                      v-for="(img, index) in event.galleryImages" 
+                      :key="index"
+                      class="aspect-square rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                    >
+                      <img :src="img" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500" />
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div class="md:col-span-1">
                 <div class="bg-white border border-gray-200 p-6 rounded-2xl shadow-sm sticky top-24">
                   
-                  <h3 class="text-lg font-bold text-gray-900 mb-2">
-                    {{ event.type === 'camp' ? 'Partecipa al camp' : 'Partecipa al torneo' }}
-                  </h3>
-                  
-                  <p class="text-sm text-gray-500 mb-6">
-                    {{ event.type === 'camp' 
-                        ? 'Per iscriversi compilare il seguente modulo' 
-                        : "Per iscriversi accedere tramite l'app Dink o clicca sotto." 
-                    }}
-                  </p>
-                  
-                  <UButton
-                    v-if="event.signupLink"
-                    :to="event.signupLink"
-                    target="_blank"
-                    size="xl"
-                    block
-                    :ui="{ rounded: 'rounded-xl' }"
-                    class="w-full font-bold text-white bg-purple-600 hover:bg-purple-700 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border-none ring-0"
-                    icon="i-heroicons-pencil-square"
+                  <div v-if="isPastEvent">
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">Rivivi l'evento</h3>
+                    <p class="text-sm text-gray-500 mb-6">
+                      Sfoglia l'album completo con tutte le foto ufficiali del torneo.
+                    </p>
+                    <UButton
+                      :to="event.externalGalleryLink"
+                      target="_blank"
+                      size="xl"
+                      block
+                      color="gray"
+                      variant="solid"
+                      class="text-white bg-primary  font-bold hover:bg-primary-dark hover:text-white transition-colors duration-300"
+                      icon="i-heroicons-photo"
                     >
-                    ISCRIVITI ORA
-                  </UButton>
-                  
-                  <div v-else class="text-center p-4 bg-gray-100 rounded-lg text-gray-500 font-medium">
-                    Iscrizioni chiuse o non disponibili
+                      GALLERY COMPLETA
+                    </UButton>
                   </div>
-                  
+
+                  <div v-else>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">
+                      {{ event.type === 'camp' ? 'Partecipa al camp' : 'Partecipa al torneo' }}
+                    </h3>
+                    <p class="text-sm text-gray-500 mb-6">
+                      {{ event.type === 'camp' 
+                          ? 'Per iscriversi compilare il seguente modulo' 
+                          : "Per iscriversi accedere tramite l'app Dink o clicca sotto." 
+                      }}
+                    </p>
+                    
+                    <UButton
+                      v-if="event.signupLink"
+                      :to="event.signupLink"
+                      target="_blank"
+                      size="xl"
+                      block
+                      :ui="{ rounded: 'rounded-xl' }"
+                      class="w-full font-bold text-white bg-purple-600 hover:bg-purple-700 shadow-lg border-none ring-0"
+                      icon="i-heroicons-pencil-square"
+                    >
+                      ISCRIVITI ORA
+                    </UButton>
+
+                    <div v-else class="text-center p-4 bg-gray-100 rounded-lg text-gray-500 font-medium">
+                      Iscrizioni non disponibili
+                    </div>
+                  </div>
+
                   <div class="mt-4 text-center">
                     <p class="text-xs text-gray-400">Hai dubbi? <a href="/#contact" class="text-primary hover:underline">Contattaci</a></p>
                   </div>
@@ -110,18 +149,36 @@
     <div v-else class="pt-32 text-center min-h-screen bg-gray-50 flex flex-col items-center justify-center">
       <h1 class="text-4xl font-bold text-gray-300 mb-4">404</h1>
       <h2 class="text-2xl font-bold text-gray-800 mb-2">Evento non trovato</h2>
-      <UButton to="/#events" color="primary" variant="solid">Torna alla lista</UButton>
+      <UButton to="/events/index" color="primary" variant="solid">Torna agli eventi</UButton>
     </div>
   </Main>
 </template>
 
 <script setup>
 import { useRoute } from 'vue-router'
-// NON serve più importare 'computed' perché la logica è semplice e diretta nel template
+import { computed } from 'vue'
 import Main from "@/components/layout/Main.vue";
-import eventsData from '~/content/events.json'
+
+// IMPORTIAMO ENTRAMBI I FILE DATI
+import upcomingEventsData from '~/content/events.json'
+import pastEventsData from '~/content/pastEvents.json'
 
 const route = useRoute()
 const currentSlug = route.params.slug
-const event = eventsData.events.find(e => e.slug === currentSlug)
+
+// LOGICA UNIFICATA:
+// 1. Cerca prima negli eventi futuri
+let foundEvent = upcomingEventsData.events.find(e => e.slug === currentSlug)
+let isPast = false
+
+// 2. Se non lo trova, cerca negli eventi passati
+if (!foundEvent) {
+  foundEvent = pastEventsData.events.find(e => e.slug === currentSlug)
+  if (foundEvent) {
+    isPast = true
+  }
+}
+
+const event = foundEvent
+const isPastEvent = isPast
 </script>

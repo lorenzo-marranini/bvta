@@ -3,18 +3,33 @@
   "partners": [
     {
       "id": 1,
-      "name": "Partner 1",
-      "imageUrl": "https://placehold.co/200x80?text=Partner+1"
+      "name": "Vince",
+      "imageUrl": "/partners/logo_vince.jpg"
     },
     {
       "id": 2,
-      "name": "Partner 2", 
-      "imageUrl": "https://placehold.co/200x80?text=Partner+2"
+      "name": "Gorgoroni", 
+      "imageUrl": "/partners/logo_gorgoroni.png"
     },
     {
       "id": 3,
-      "name": "Partner 3",
-      "imageUrl": "https://placehold.co/200x80?text=Partner+3"
+      "name": "Federico Balestri",
+      "imageUrl": "/partners/logo_fede_balestri.png"
+    },
+    {
+      "id": 4,
+      "name": "Calortech",
+      "imageUrl": "/partners/logo_calortech.png"
+    },
+    {
+      "id": 5,
+      "name": "OrangeBeach",
+      "imageUrl": "/partners/logo_orange_beach.png"
+    },
+    {
+      "id": 6,
+      "name": "Pardi",
+      "imageUrl": "/partners/logo_pardi.png"
     }
   ]
-} 
+}

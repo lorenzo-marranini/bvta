@@ -1,61 +1,66 @@
 <template>
   <section class="py-24 bg-background-primary">
     <UContainer>
-      <div class="max-w-4xl mx-auto">
-        <!-- Header -->
-        <div class="text-center mb-16">
-          <h2 
-            ref="titleRef"
-            class="text-4xl font-bold text-primary mb-4"
-          >
+      <div class="max-w-5xl mx-auto animate-fade-in">
+        
+        <div class="text-center mb-12">
+          <h2 class="text-4xl font-bold text-primary mb-4">
             Contattaci
           </h2>
-          <p 
-            ref="subtitleRef"
-            class="text-xl text-gray-600"
-          >
-            Siamo qui per aiutarti. Non esitare a contattarci.
+          <p class="text-xl text-gray-600">
+            Siamo qui per aiutarti. Scegli il canale che preferisci.
           </p>
         </div>
 
-        <!-- Contact Cards -->
-        <div 
-          ref="cardsRef"
-          class="grid md:grid-cols-2 gap-8"
-        >
-          <!-- Phone Card -->
-          <div class="bg-white p-8 rounded-lg shadow-lg text-center">
-            <div class="w-16 h-16 bg-primary-lightest text-primary rounded-full flex items-center justify-center mx-auto mb-6">
-              <UIcon
-                name="i-heroicons-phone"
-                class="w-8 h-8"
-              />
-            </div>
-            <h3 class="text-2xl font-semibold mb-4">Telefono</h3>
-            <a 
-              href="tel:+390123456789" 
-              class="text-xl text-primary hover:text-primary-dark transition-colors"
-            >
-              +39 012 345 6789
-            </a>
-          </div>
-
-          <!-- Email Card -->
-          <div class="bg-white p-8 rounded-lg shadow-lg text-center">
-            <div class="w-16 h-16 bg-primary-lightest text-primary rounded-full flex items-center justify-center mx-auto mb-6">
+        <div class="grid md:grid-cols-2 gap-6">
+          
+          <a 
+            href="mailto:beachvolleytirreniacademy@gmail.com?subject=Richiesta%20Info" 
+            class="group bg-white p-6 rounded-xl shadow-md border border-gray-100 flex items-center transition-all duration-200 hover:shadow-xl hover:-translate-y-1 hover:border-primary/30 cursor-pointer"
+          >
+            <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center flex-shrink-0 mr-5 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-200">
               <UIcon
                 name="i-heroicons-envelope"
-                class="w-8 h-8"
+                class="w-7 h-7"
               />
             </div>
-            <h3 class="text-2xl font-semibold mb-4">Email</h3>
-            <a 
-              href="mailto:info@example.com" 
-              class="text-xl text-primary hover:text-primary-dark transition-colors"
-            >
-              info@example.com
-            </a>
-          </div>
+            
+            <div class="flex-grow">
+              <h3 class="text-lg font-bold text-gray-800 mb-1 group-hover:text-blue-600 transition-colors">
+                Scrivici una mail!
+              </h3>
+              <p class="text-sm text-gray-500 font-medium break-all sm:break-normal">
+                beachvolleytirreniacademy@gmail.com
+              </p>
+            </div>
+            
+            <UIcon name="i-heroicons-arrow-right" class="w-5 h-5 text-gray-300 group-hover:text-blue-600 transition-colors opacity-0 group-hover:opacity-100 transform translate-x-[-10px] group-hover:translate-x-0 duration-200" />
+          </a>
+
+          <a 
+            href="https://www.instagram.com/_beachvolleytirreniaacademy/" 
+            target="_blank"
+            class="group bg-white p-6 rounded-xl shadow-md border border-gray-100 flex items-center transition-all duration-200 hover:shadow-xl hover:-translate-y-1 hover:border-pink-500/30 cursor-pointer"
+          >
+            <div class="w-14 h-14 bg-pink-50 text-pink-600 rounded-full flex items-center justify-center flex-shrink-0 mr-5 group-hover:bg-gradient-to-tr group-hover:from-yellow-400 group-hover:via-red-500 group-hover:to-purple-500 group-hover:text-white transition-all duration-200">
+              <UIcon
+                name="i-heroicons-paper-airplane" 
+                class="w-6 h-6 transform -rotate-45 translate-x-0.5"
+              />
+            </div>
+            
+            <div class="flex-grow">
+              <h3 class="text-lg font-bold text-gray-800 mb-1 group-hover:text-pink-600 transition-colors">
+                Contattaci in DM su Instagram!
+              </h3>
+              <p class="text-sm text-gray-500 font-medium">
+                @_beachvolleytirreniacademy
+              </p>
+            </div>
+
+            <UIcon name="i-heroicons-arrow-right" class="w-5 h-5 text-gray-300 group-hover:text-pink-600 transition-colors opacity-0 group-hover:opacity-100 transform translate-x-[-10px] group-hover:translate-x-0 duration-200" />
+          </a>
+
         </div>
       </div>
     </UContainer>
@@ -63,43 +68,23 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
-import gsap from 'gsap'
-import ScrollTrigger from 'gsap/ScrollTrigger'
-
-gsap.registerPlugin(ScrollTrigger)
-
-const titleRef = ref(null)
-const subtitleRef = ref(null)
-const cardsRef = ref(null)
-
-onMounted(() => {
-  const tl = gsap.timeline({
-    scrollTrigger: {
-      trigger: titleRef.value,
-      start: 'top bottom-=100',
-      toggleActions: 'play none none reverse'
-    }
-  })
-
-  tl.from(titleRef.value, {
-    opacity: 0,
-    y: 30,
-    duration: 1,
-    ease: 'power3.out'
-  })
-  .from(subtitleRef.value, {
-    opacity: 0,
-    y: 20,
-    duration: 0.8,
-    ease: 'power3.out'
-  }, '-=0.6')
-  .from(cardsRef.value.children, {
-    opacity: 0,
-    y: 30,
-    duration: 0.8,
-    stagger: 0.2,
-    ease: 'power3.out'
-  }, '-=0.4')
-})
+// Nessuno script necessario per le animazioni, tutto gestito via CSS
 </script>
+
+<style scoped>
+/* Animazione CSS semplice e istantanea all'apertura */
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>

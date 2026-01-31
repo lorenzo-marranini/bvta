@@ -1,10 +1,4 @@
 {
-    "footerMenu": [
-        { "label": "Home", "path": "/" },
-        { "label": "Eventi", "path" : "/#events"},
-        { "label": "Chi Siamo", "path": "/#about" },
-        { "label": "Partner", "path": "/#partners" }
-    ],
     "socialLinks": [
         { 
             "label": "Instagram", 
@@ -18,7 +12,7 @@
         },
         { 
             "label": "Email", 
-            "path": "mailto:beachvolleytirreniacademy@gmail.com",
+            "path": "mailto:beachvolleytirreniacademy@gmail.com?subject=Richiesta%20Info",
             "icon": "i-simple-icons-gmail"
         }
     ]

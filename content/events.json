@@ -10,35 +10,23 @@
       "type": "torneo",  
       "title": "Torneo di Apertura Stagione 2026",
       "date": "25 Aprile 2026",
-      "category": "2x2 Maschile / Femminile",
-      "location": "Bagno Tirrenia",
+      "category": "2x2 Maschile e 2x2 Femminile",
+      "location": "Bagno Roma",
       "signupLink": "https://forms.google.com/...",
-      "description": "Partecipa al più grande torneo...",
-      "imageUrl": "/eventImages/BagnoLomi.jpg"
+      "description": "Primo torneo della stagione 2025!",
+      "imageUrl": "/eventImages/bagnolomi2025.jpg"
     },
     {
       "id": 2,
-      "slug": "beach-camp-luglio",
+      "slug": "camp",
       "type": "camp", 
-      "title": "Beach Volley Camp",
-      "date": "1-7 Luglio 2024",
+      "title": "Beach Volley Camp 2026",
+      "date": "1-7 Settembre 2026",
       "category": "Open - Tutti i livelli",
-      "location": "Bagno Tirrenia",
+      "location": "Bagno Roma",
       "signupLink": "https://forms.google.com/...", 
-      "description": "Una settimana intensiva...",
-      "imageUrl": "/eventImages/Gughina.jpg"
-    },
-    {
-      "id": 3,
-      "slug": "gughina",
-      "type": "torneo", 
-      "title": "Gughina",
-      "date": "20 Luglio 2024",
-      "category": "Misto 2x2 Giallo",
-      "location": "Bagno degli Americani",
-      "signupLink": "https://forms.google.com/...",
-      "description": "Torneo al tramonto...",
-      "imageUrl": "/eventImages/Gughina.jpg"
+      "description": "Una settimana intensa di beach volley",
+      "imageUrl": "/eventImages/gughina2025.jpg"
     }
   ]
 }

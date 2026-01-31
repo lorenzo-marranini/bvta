@@ -1,13 +1,14 @@
 <template>
-  <section class="pt-24 overflow-hidden bg-background-primary">
+  <section class="pt-24 pb-12 overflow-hidden bg-background-primary">
     <UContainer>
-      <div class="grid md:grid-cols-2 gap-12 items-center px-4 md:px-0">
-        <div class="relative order-2 md:order-1">
+      <div class="grid md:grid-cols-2 gap-12 items-start px-4 md:px-0">
+        
+        <div class="relative order-2 md:order-1 mt-8 md:mt-0">
           <div ref="imageWrapperRef" class="relative z-10">
             <img
               :src="content.image"
-              alt="Beach Volley"
-              class="rounded-lg shadow-xl w-full"
+              alt="Beach Volley Action"
+              class="rounded-lg shadow-xl w-full object-cover h-[600px]" 
             />
           </div>
           <div
@@ -19,17 +20,61 @@
         <div class="space-y-6 order-1 md:order-2 text-white">
           <h2 
             ref="titleRef"
-            class="text-3xl md:text-4xl font-bold text-gray-150 text-primary"
+            class="text-3xl md:text-4xl font-bold text-primary mb-6"
           >
             {{ content.title }}
           </h2>
-          <div 
-            ref="contentRef"
-            class="space-y-4 text-gray-150"
-          >
-            <p v-for="paragraph in content.description" :key="paragraph">
-              {{ paragraph }}
-            </p>
+          
+          <div ref="contentRef" class="space-y-8">
+            
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-white border-l-4 border-primary pl-3">
+                Dalla passione alla professione
+              </h3>
+              <p class="text-gray-300 leading-relaxed">
+                La Beach Volley Tirrenia Academy (BVTA) nasce nel 2024, frutto dell'esperienza e della visione condivisa di un gruppo di amici uniti da una profonda passione per la sabbia. Quella che è iniziata come una piccola associazione sportiva si è evoluta rapidamente in un punto di riferimento per il beach volley sul litorale pisano, trasformando l'entusiasmo in una struttura organizzativa solida e professionale.
+              </p>
+            </div>
+
+            <div class="space-y-3">
+              <h3 class="text-xl font-bold text-white border-l-4 border-primary pl-3">
+                La Nostra Missione
+              </h3>
+              <p class="text-gray-300 leading-relaxed">
+                Il nostro obiettivo è duplice: promuovere la cultura del beach volley nel nostro territorio e posizionarci come leader nell'organizzazione di eventi sportivi di rilievo. Non ci limitiamo a diffondere uno sport; lavoriamo quotidianamente per creare una comunità coesa, convinti che l'attività agonistica sia un potente strumento di crescita personale, inclusione sociale e lealtà.
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+              
+              <div class="bg-white/5 border border-white/10 rounded-xl p-5 hover:border-primary/50 transition-colors duration-300 group">
+                <div class="flex items-center gap-3 mb-3">
+                  <div class="p-2 bg-orange-500/20 rounded-lg text-orange-400 group-hover:text-orange-300 transition-colors">
+                    <UIcon name="i-heroicons-sun" class="w-6 h-6" />
+                  </div>
+                  <h3 class="font-bold text-lg text-white">Stagione Estiva</h3>
+                </div>
+                <p class="text-sm text-gray-400 leading-relaxed">
+                  Grandi tornei come la <span class="text-primary font-semibold">Gughina Summer Cup</span>. 
+                  Nel 2025 record di <span class="text-white font-bold">140 giocatori</span> partecipanti.
+                </p>
+              </div>
+
+              <div class="bg-white/5 border border-white/10 rounded-xl p-5 hover:border-primary/50 transition-colors duration-300 group">
+                <div class="flex items-center gap-3 mb-3">
+                  <div class="p-2 bg-blue-500/20 rounded-lg text-blue-400 group-hover:text-blue-300 transition-colors">
+                    <UIcon name="i-heroicons-trophy" class="w-6 h-6" />
+                  </div>
+                  <h3 class="font-bold text-lg text-white">Stagione Invernale</h3>
+                </div>
+                <p class="text-sm text-gray-400 leading-relaxed">
+                  Eccellenza nel circuito AIBVC. Finali a Cesenatico 2025 raggiunte con un 
+                  <span class="text-white font-bold">5° e 9° posto</span> nazionale.
+                </p>
+              </div>
+
+            </div>
+
           </div>
         </div>
       </div>
@@ -42,14 +87,15 @@ import { onMounted, ref } from 'vue'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import aboutContent from '~/content/about.json'
-import aboutImage from '~/assets/images/about.jpg'
+import aboutImage from '~/assets/images/about.jpg' 
+
 gsap.registerPlugin(ScrollTrigger)
 
 const imageWrapperRef = ref(null)
 const shapeRef = ref(null)
 const titleRef = ref(null)
 const contentRef = ref(null)
-const buttonRef = ref(null)
+
 const content = ref({
   ...aboutContent,
   image: aboutImage
@@ -59,41 +105,43 @@ onMounted(() => {
   const tl = gsap.timeline({
     scrollTrigger: {
       trigger: imageWrapperRef.value,
-      start: 'top bottom-=100',
+      start: 'top 85%',
       toggleActions: 'play none none reverse'
     }
   })
 
+  // 1. Immagine
   tl.from(imageWrapperRef.value, {
     opacity: 0,
-    x: -50,
-    duration: 1,
+    x: -30,
+    duration: 0.6,
     ease: 'power3.out'
   })
+  
+  // 2. Forma Decorativa (Parte INSIEME all'immagine grazie a '<')
   .from(shapeRef.value, {
     opacity: 0,
     x: -30,
-    duration: 1,
+    duration: 0.6,
     ease: 'power3.out'
-  }, '-=0.8')
+  }, '<') 
+
+  // 3. Titolo (Parte appena 0.1s dopo l'inizio dell'immagine, quindi quasi subito)
   .from(titleRef.value, {
     opacity: 0,
-    y: 30,
-    duration: 1,
+    y: 20,
+    duration: 0.5,
     ease: 'power3.out'
-  }, '-=0.8')
+  }, '<0.1')
+
+  // 4. Contenuti (Parte appena 0.2s dopo l'inizio, quindi quasi subito)
   .from(contentRef.value.children, {
     opacity: 0,
     y: 20,
-    duration: 0.8,
-    stagger: 0.2,
-    ease: 'power3.out'
-  }, '-=0.8')
-  .from(buttonRef.value, {
-    opacity: 0,
-    y: 20,
-    duration: 0.8,
-    ease: 'power3.out'
-  }, '-=0.6')
+    duration: 0.5,
+    stagger: 0.05, // Cascata velocissima tra i paragrafi
+    ease: 'power3.out',
+    clearProps: 'all'
+  }, '<0.2')
 })
 </script>

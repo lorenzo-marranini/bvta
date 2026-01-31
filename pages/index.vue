@@ -1,12 +1,12 @@
 <template lang="">
     <Main>
         <HeroSection id="hero" />
-        <UpcomingEventSection id="events" />
+        <!-- <UpcomingEventSection id="events" /> -->
         <PartnersSection id="partners" />
         <AboutSection id="about" />
         <StatsSection id="stats" />
         <GallerySection id="gallery" />
-        <!-- <ContactSection id="contact" /> -->
+        <ContactSection id="contact" />
     </Main>
 </template>
 <script setup>
@@ -18,4 +18,5 @@ import PartnersSection from "@/components/sections/PartnersSection.vue";
 import ContactSection from "@/components/sections/ContactSection.vue";
 import UpcomingEventSection from "@/components/sections/UpcomingEventSection.vue";
 import GallerySection from "@/components/sections/GallerySection.vue";
+import PastEventsSection from "@/components/sections/PastEventsSection.vue";
 </script>

@@ -6,7 +6,7 @@
     <UContainer>
       <div class="flex justify-between items-center h-16 px-4 text-white">
         <div class="flex items-center">
-          <NuxtLink to="/" class="text-xl font-bold">
+          <NuxtLink to="/#hero" class="text-xl font-bold">
             <img src="~/assets/images/logo/logo.png" alt="Logo" class="max-h-42">
           </NuxtLink>
         </div>
@@ -94,10 +94,10 @@ const { scrollToElement } = useScrollTo()
 
 // NOTA: Qui ho messo gli slash "/" davanti ai link con cancelletto #
 const menuItems = [
-  { label: 'Home', path: '/' },
-  { label: 'Eventi', path: '/#events' },
-  { label: 'Partner', path: '/#partners' },
-  { label: 'Chi Siamo', path: '/#about' },
+  { label: 'Home', path: '/#hero' },
+  { label: 'Eventi', path: '/events' },
+  { label: 'Strutture', path: '/strutture' },
+  { label: 'Stagione Invernale', path: '/stagioneinvernale' },
   { label: 'Contatti', path: '/#contact' }
 ]
 
