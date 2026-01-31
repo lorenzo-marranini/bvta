@@ -1,0 +1,92 @@
+<template>
+  <section id="news" class="py-20 bg-white">
+    <UContainer>
+      
+      <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
+        <div class="max-w-2xl">
+          <h2 class="text-3xl font-bold text-primary mb-4">Ultime Novità</h2>
+          <p class="text-gray-600">
+            Rimani aggiornato su tornei, eventi e risultati della Beach Volley Tirrenia Academy.
+          </p>
+        </div>
+        <UButton 
+          to="/news" 
+          variant="ghost" 
+          class="hidden md:flex items-center text-primary hover:text-primary-dark"
+        >
+          Vedi tutte le news <UIcon name="i-heroicons-arrow-right" class="ml-2"/>
+        </UButton>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <NuxtLink 
+          v-for="article in sortedNews" 
+          :key="article.id"
+          :to="`/news/${article.id}`"
+          class="group flex flex-col bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+        >
+          
+          <div v-if="article.image" class="h-48 overflow-hidden bg-gray-100 relative shrink-0">
+            <img 
+              :src="article.image" 
+              :alt="article.title" 
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              @error="$event.target.style.display='none'" 
+            />
+            
+            <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-primary shadow-sm">
+              {{ formatDate(article.date) }}
+            </div>
+          </div>
+
+          <div class="p-6 flex flex-col flex-grow">
+            
+            <div v-if="!article.image" class="flex items-center text-xs font-bold text-gray-400 mb-3 uppercase tracking-wide">
+               <UIcon name="i-heroicons-calendar" class="w-4 h-4 mr-1"/>
+               {{ formatDate(article.date) }}
+            </div>
+
+            <h3 class="text-xl font-bold text-gray-800 mb-3 group-hover:text-primary transition-colors line-clamp-2">
+              {{ article.title }}
+            </h3>
+
+            <p class="text-gray-500 text-sm leading-relaxed mb-6 flex-grow line-clamp-3">
+              {{ article.excerpt }}
+            </p>
+            
+            <div class="mt-auto pt-4 border-t border-gray-50 flex justify-between items-center">
+              <span class="text-xs font-semibold text-primary uppercase tracking-wide group-hover:underline flex items-center">
+                Leggi articolo <UIcon name="i-heroicons-arrow-right" class="w-4 h-4 ml-1 transform transition-transform group-hover:translate-x-1" />
+              </span>
+            </div>
+          </div>
+
+        </NuxtLink>
+
+      </div>
+
+      <div class="mt-8 text-center md:hidden">
+        <UButton to="/news" variant="outline" block>Vedi tutte le news</UButton>
+      </div>
+
+    </UContainer>
+  </section>
+</template>
+
+<script setup>
+import { computed } from 'vue';
+import newsData from '~/content/news.json';
+
+// LOGICA ORDINAMENTO E LIMITAZIONE
+const sortedNews = computed(() => {
+  const articles = [...newsData.articles];
+  articles.sort((a, b) => new Date(b.date) - new Date(a.date));
+  return articles.slice(0, 3);
+});
+
+const formatDate = (dateString) => {
+  const options = { day: 'numeric', month: 'long', year: 'numeric' };
+  return new Date(dateString).toLocaleDateString('it-IT', options);
+};
+</script>
