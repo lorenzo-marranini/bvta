@@ -96,8 +96,9 @@ const { scrollToElement } = useScrollTo()
 const menuItems = [
   { label: 'Home', path: '/#hero' },
   { label: 'Eventi', path: '/events' },
-  { label: 'Strutture', path: '/strutture' },
+  { label: 'News', path: '/news' },
   { label: 'Stagione Invernale', path: '/stagioneinvernale' },
+  { label: 'Strutture', path: '/strutture' },
   { label: 'Shop', path: '/shop' },
   { label: 'Contatti', path: '/#contact' }
 ]

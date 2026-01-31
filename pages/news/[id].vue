@@ -72,7 +72,6 @@ import newsData from '~/content/news.json';
 const route = useRoute();
 const articleId = route.params.id; 
 
-// Nota l'uso di == invece di === per gestire stringa vs numero
 const article = newsData.articles.find(a => a.id == articleId);
 
 const formatDate = (dateString) => {

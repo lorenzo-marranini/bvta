@@ -24,7 +24,7 @@
           v-for="article in sortedNews" 
           :key="article.id"
           :to="`/news/${article.id}`"
-          class="group flex flex-col bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+          class="group flex flex-col bg-white rounded-xl border border-gray-200 shadow-md overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 cursor-pointer"
         >
           
           <div v-if="article.image" class="h-48 overflow-hidden bg-gray-100 relative shrink-0">
@@ -35,16 +35,23 @@
               @error="$event.target.style.display='none'" 
             />
             
-            <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-primary shadow-sm">
-              {{ formatDate(article.date) }}
+            <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-sm flex items-center gap-1.5">
+              <UIcon name="i-heroicons-calendar" class="w-4 h-4 text-primary"/>
+              <span class="text-xs font-bold text-primary">
+                {{ formatDate(article.date) }}
+              </span>
             </div>
           </div>
 
           <div class="p-6 flex flex-col flex-grow">
             
-            <div v-if="!article.image" class="flex items-center text-xs font-bold text-gray-400 mb-3 uppercase tracking-wide">
-               <UIcon name="i-heroicons-calendar" class="w-4 h-4 mr-1"/>
-               {{ formatDate(article.date) }}
+            <div v-if="!article.image" class="self-start mb-4">
+              <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-gray-200 shadow-sm">
+                 <UIcon name="i-heroicons-calendar" class="w-4 h-4 text-primary"/>
+                 <span class="text-xs font-bold text-primary">
+                   {{ formatDate(article.date) }}
+                 </span>
+              </div>
             </div>
 
             <h3 class="text-xl font-bold text-gray-800 mb-3 group-hover:text-primary transition-colors line-clamp-2">
@@ -55,7 +62,7 @@
               {{ article.excerpt }}
             </p>
             
-            <div class="mt-auto pt-4 border-t border-gray-50 flex justify-between items-center">
+            <div class="mt-auto pt-4 border-t border-gray-100 flex justify-between items-center">
               <span class="text-xs font-semibold text-primary uppercase tracking-wide group-hover:underline flex items-center">
                 Leggi articolo <UIcon name="i-heroicons-arrow-right" class="w-4 h-4 ml-1 transform transition-transform group-hover:translate-x-1" />
               </span>
@@ -78,7 +85,6 @@
 import { computed } from 'vue';
 import newsData from '~/content/news.json';
 
-// LOGICA ORDINAMENTO E LIMITAZIONE
 const sortedNews = computed(() => {
   const articles = [...newsData.articles];
   articles.sort((a, b) => new Date(b.date) - new Date(a.date));

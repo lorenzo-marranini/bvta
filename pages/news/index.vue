@@ -14,17 +14,16 @@
             :key="article.id"
             class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300 flex flex-col md:flex-row group"
           >
-            <div class="w-full md:w-64 h-48 md:h-auto flex-shrink-0 relative bg-gray-100 overflow-hidden">
+            <div 
+              v-if="article.image" 
+              class="w-full md:w-64 h-48 md:h-auto flex-shrink-0 relative bg-gray-100 overflow-hidden"
+            >
               <img 
-                v-if="article.image"
                 :src="article.image" 
                 :alt="article.title" 
                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 @error="$event.target.style.display='none'"
               />
-              <div v-else class="w-full h-full flex items-center justify-center text-gray-300">
-                <UIcon name="i-heroicons-photo" class="w-12 h-12"/>
-              </div>
             </div>
 
             <div class="p-6 flex flex-col justify-center flex-grow">
@@ -103,7 +102,6 @@ const currentPage = ref(1);
 
 const allSortedNews = computed(() => {
   const articles = [...(newsData.articles || [])];
-  // Filtra eventuali articoli senza ID o duplicati se necessario, ma col nuovo JSON non serve
   return articles.sort((a, b) => new Date(b.date) - new Date(a.date));
 });
 
