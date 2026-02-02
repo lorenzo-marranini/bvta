@@ -9,10 +9,11 @@
         </div>
 
         <div class="space-y-6">
-          <article 
+          <NuxtLink 
             v-for="article in paginatedNews" 
             :key="article.id"
-            class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300 flex flex-col md:flex-row group"
+            :to="`/news/${article.id}`"
+            class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300 flex flex-col md:flex-row group block"
           >
             <div 
               v-if="article.image" 
@@ -41,16 +42,15 @@
               </p>
 
               <div class="mt-auto">
-                <NuxtLink 
-                  :to="`/news/${article.id}`" 
-                  class="text-primary font-semibold text-sm hover:underline cursor-pointer flex items-center group-hover:translate-x-1 transition-transform"
+                <span 
+                  class="text-primary font-semibold text-sm hover:underline flex items-center group-hover:translate-x-1 transition-transform"
                 >
                   Leggi tutto <UIcon name="i-heroicons-arrow-right" class="w-4 h-4 ml-1"/>
-                </NuxtLink>
+                </span>
               </div>
               
             </div>
-          </article>
+          </NuxtLink>
         </div>
 
         <div v-if="paginatedNews.length === 0" class="text-center py-20 text-gray-500">
