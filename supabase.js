@@ -1,7 +1,11 @@
 import { createClient } from '@supabase/supabase-js'
 
-// Incolla qui i dati che hai copiato (in futuro useremo le variabili d'ambiente)
-const supabaseUrl = 'https://vhqpzjlhvsrsrdbxcpwn.supabase.co'
-const supabaseKey = 'sb_publishable_AiZT8vHnFzjwn5lp1rqX6A_g5mF2xqk'
+// Recupera le variabili dal file .env (o dalle impostazioni di Vercel)
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseKey = import.meta.env.VITE_SUPABASE_KEY
+
+if (!supabaseUrl || !supabaseKey) {
+  console.error('⚠️ Supabase URL o Key mancanti! Controlla il file .env')
+}
 
 export const supabase = createClient(supabaseUrl, supabaseKey)
