@@ -48,7 +48,7 @@
             </div>
             
             <div class="flex items-center justify-between mt-auto">
-              <span class="font-bold text-xl text-primary">{{ product.price }}</span>
+              <span class="font-bold text-xl text-primary">{{ product.price }} €</span>
               
               <UButton 
                 v-if="product.type === 'order'" 
