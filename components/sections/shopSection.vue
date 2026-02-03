@@ -9,7 +9,11 @@
         </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div v-if="fetchLoading" class="text-center py-12 text-gray-500">
+        Caricamento prodotti...
+      </div>
+
+      <div v-else-if="products.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         <div 
           v-for="product in products" 
           :key="product.id" 
@@ -31,7 +35,7 @@
             </span>
             
             <img 
-              :src="product.image" 
+              :src="product.image || 'https://placehold.co/600x600?text=BVTA+Shop'" 
               :alt="product.name" 
               class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
             />
@@ -67,6 +71,14 @@
             </div>
           </div>
         </div>
+      </div>
+
+      <div v-else class="text-center py-16">
+        <div class="bg-gray-100 p-6 rounded-full inline-block mb-4">
+          <UIcon name="i-heroicons-shopping-bag" class="w-12 h-12 text-gray-400" />
+        </div>
+        <h3 class="text-xl font-bold text-gray-700 mb-2">Al momento nessun prodotto ordinabile</h3>
+        <p class="text-gray-500">Tornate a trovarci presto per le nuove collezioni!</p>
       </div>
 
       <div class="mt-16 text-center border-t border-gray-200 pt-12">
@@ -144,7 +156,7 @@
             type="submit" 
             block 
             size="lg"
-            :loading="loading"
+            :loading="submitLoading"
             :disabled="!isFormValid || status.type === 'success'"
             variant="solid"
             class="transition-all duration-300 font-bold border"
@@ -165,17 +177,20 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-import productsData from '~/content/products.json';
+import { ref, computed, onMounted } from 'vue';
+import { supabase } from '~/supabase.js';
 
 // CONFIGURAZIONE
 const vintedProfileUrl = "https://www.vinted.it/member/3133809858"; 
 
-// STATO
-const products = ref(productsData);
+// STATO DATI
+const products = ref([]);
+const fetchLoading = ref(true); // Stato caricamento prodotti
+
+// STATO MODALE & FORM
 const showModal = ref(false);
 const selectedProduct = ref(null);
-const loading = ref(false);
+const submitLoading = ref(false); // Stato invio form (diverso dal caricamento prodotti)
 const status = ref({ type: '', message: '' });
 
 // REFS FORM
@@ -193,6 +208,25 @@ const isFormValid = computed(() => {
          isValidEmail(formEmail.value) && 
          formNotes.value.length > 0;
 });
+
+// RECUPERO DATI DAL DB
+const getProducts = async () => {
+  try {
+    fetchLoading.value = true;
+    
+    let { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .order('id'); // O order by created_at
+
+    if (error) throw error;
+    products.value = data || [];
+  } catch (e) {
+    console.error('Errore caricamento prodotti:', e);
+  } finally {
+    fetchLoading.value = false;
+  }
+};
 
 // GESTIONE MODALE
 const openOrderModal = (product) => {
@@ -213,7 +247,7 @@ const closeModal = () => {
 
 // INVIO FORM
 const submitRequest = async () => {
-  loading.value = true;
+  submitLoading.value = true;
   status.value = { type: '', message: '' };
 
   try {
@@ -224,7 +258,6 @@ const submitRequest = async () => {
         "Accept": "application/json"
       },
       body: JSON.stringify({
-        // MODIFICA QUI: Oggetto generico per evitare ripetizioni visive
         _subject: `Nuova Richiesta Ordine Shop BVTA`,
         Prodotto: selectedProduct.value.name,
         Prezzo: selectedProduct.value.price,
@@ -257,9 +290,13 @@ const submitRequest = async () => {
       message: 'Si è verificato un errore. Per favore riprova o contattaci direttamente.' 
     };
   } finally {
-    loading.value = false;
+    submitLoading.value = false;
   }
 };
+
+onMounted(() => {
+  getProducts();
+});
 </script>
 
 <style scoped>
