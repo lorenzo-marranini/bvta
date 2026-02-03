@@ -9,7 +9,11 @@
         </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div v-if="fetchLoading" class="text-center py-12 text-gray-500">
+        Caricamento prodotti...
+      </div>
+
+      <div v-else-if="products.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         <div 
           v-for="product in products" 
           :key="product.id" 
@@ -31,7 +35,7 @@
             </span>
             
             <img 
-              :src="product.image" 
+              :src="product.image || 'https://placehold.co/600x600?text=BVTA+Shop'" 
               :alt="product.name" 
               class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
             />
@@ -69,6 +73,14 @@
         </div>
       </div>
 
+      <div v-else class="text-center py-16">
+        <div class="bg-gray-100 p-6 rounded-full inline-block mb-4">
+          <UIcon name="i-heroicons-shopping-bag" class="w-12 h-12 text-gray-400" />
+        </div>
+        <h3 class="text-xl font-bold text-gray-700 mb-2">Al momento nessun prodotto ordinabile</h3>
+        <p class="text-gray-500">Tornate a trovarci presto per le nuove collezioni!</p>
+      </div>
+
       <div class="mt-16 text-center border-t border-gray-200 pt-12">
         <h3 class="text-2xl font-bold mb-3 text-gray-800">Cerchi taglie uniche o occasioni?</h3>
         <p class="mb-8 text-gray-600">Gestiamo tutto il materiale "pronta consegna" e le rimanenze dei tornei direttamente sul nostro profilo Vinted.</p>
@@ -85,181 +97,159 @@
 
     </UContainer>
 
-    <div v-if="showModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-      <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 relative animate-fade-in flex flex-col max-h-[90vh] overflow-y-auto">
-        <button @click="closeModal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10">
-          <UIcon name="i-heroicons-x-mark" class="w-6 h-6" />
-        </button>
+    <Teleport to="body">
+      <div v-if="showModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
         
-        <h3 class="text-2xl font-bold mb-2 text-primary">Richiedi {{ selectedProduct?.name }}</h3>
-        <p class="text-sm text-gray-500 mb-6">
-          Compila il form. Ti risponderemo via mail per confermare la disponibilità, la taglia e il pagamento.
-        </p>
+        <div class="absolute inset-0" @click="closeModal"></div>
 
-        <form @submit.prevent="submitRequest" class="space-y-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full p-0 relative animate-fade-in flex flex-col max-h-[90vh] overflow-hidden z-10">
           
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Nome e Cognome</label>
-            <input 
-              type="text" 
-              v-model.trim="formName" 
-              required 
-              class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition text-gray-700" 
-              placeholder="Mario Rossi"
-            />
+          <div class="bg-gray-50 p-6 border-b border-gray-100 flex justify-between items-center">
+            <div>
+              <h3 class="text-xl font-bold text-gray-900">Come ordinare</h3>
+              <p class="text-sm text-gray-500 mt-1">
+                Prodotto: <span class="font-semibold text-primary">{{ selectedProduct?.name }}</span>
+              </p>
+            </div>
+            <button @click="closeModal" class="text-gray-400 hover:text-red-500 p-2 rounded-full hover:bg-white transition-colors">
+              <UIcon name="i-heroicons-x-mark" class="w-6 h-6" />
+            </button>
           </div>
 
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">La tua Email</label>
-            <input 
-              type="email" 
-              v-model.trim="formEmail" 
-              required 
-              class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition text-gray-700" 
-              placeholder="nome@esempio.com"
-            />
-          </div>
-          
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Taglia / Note</label>
-            <textarea 
-              v-model.trim="formNotes" 
-              rows="3" 
-              required
-              class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition text-gray-700"
-              placeholder="Es. Taglia L, ne vorrei 2 pezzi..."
-            ></textarea>
-          </div>
-          
-          <div v-if="status.message" class="w-full">
-            <p v-if="status.type === 'success'" class="text-green-600 text-sm font-bold text-center bg-green-50 p-3 rounded-lg border border-green-100">
-              <UIcon name="i-heroicons-check-circle" class="align-middle mr-1"/> {{ status.message }}
+          <div class="p-8 space-y-6 overflow-y-auto">
+            <p class="text-gray-600 text-sm mb-4">
+              Per completare l'ordine, contattaci direttamente indicando la <strong>taglia</strong> e la <strong>quantità</strong> desiderata. Ti confermeremo la disponibilità immediatamente.
             </p>
-            <p v-if="status.type === 'error'" class="text-red-600 text-sm font-bold text-center bg-red-50 p-3 rounded-lg border border-red-100">
-              {{ status.message }}
+
+            <div 
+              @click="copyEmail"
+              class="flex items-center p-4 rounded-xl border-2 border-transparent bg-primary/5 hover:border-primary/30 hover:bg-primary/10 transition-all group cursor-pointer"
+            >
+              <div 
+                class="w-12 h-12 rounded-full flex items-center justify-center shadow-sm mr-4 transition-all duration-300"
+                :class="emailCopied ? 'bg-green-500 text-white scale-110' : 'bg-white text-primary group-hover:scale-110'"
+              >
+                <UIcon :name="emailCopied ? 'i-heroicons-check' : 'i-heroicons-envelope'" class="w-6 h-6" />
+              </div>
+              
+              <div>
+                <h4 class="font-bold text-gray-900">
+                  {{ emailCopied ? 'Indirizzo Copiato!' : 'Scrivici una mail' }}
+                </h4>
+                <p class="text-sm text-gray-600">
+                  {{ emailCopied ? 'Incolla nella tua mail.' : 'beachvolleytirreniacademy@gmail.com' }}
+                </p>
+              </div>
+              
+              <UIcon 
+                v-if="!emailCopied"
+                name="i-heroicons-document-duplicate" 
+                class="w-5 h-5 text-gray-400 ml-auto group-hover:text-primary group-hover:scale-110 transition-all" 
+              />
+            </div>
+
+            <a 
+              :href="getWhatsappLink()" 
+              target="_blank"
+              class="flex items-center p-4 rounded-xl border-2 border-transparent bg-green-50 hover:border-green-200 hover:bg-green-100 transition-all group"
+            >
+              <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm text-green-600 mr-4 group-hover:scale-110 transition-transform">
+                <UIcon name="i-heroicons-chat-bubble-oval-left-ellipsis" class="w-6 h-6" />
+              </div>
+              <div>
+                <h4 class="font-bold text-gray-900">Ordina su WhatsApp</h4>
+                <p class="text-sm text-gray-600">Messaggio precompilato con il prodotto.</p>
+              </div>
+              <UIcon name="i-heroicons-arrow-up-right" class="w-5 h-5 text-gray-400 ml-auto group-hover:text-green-600 group-hover:translate-x-1 transition-all" />
+            </a>
+
+          </div>
+
+          <div class="bg-gray-50 p-4 text-center border-t border-gray-100">
+            <p class="text-xs text-gray-400">
+              Pagamenti accettati: Bonifico, Paypal o contanti alla consegna.
             </p>
           </div>
 
-          <UButton 
-            type="submit" 
-            block 
-            size="lg"
-            :loading="loading"
-            :disabled="!isFormValid || status.type === 'success'"
-            variant="solid"
-            class="transition-all duration-300 font-bold border"
-            :class="[
-              isFormValid && status.type !== 'success'
-                ? 'bg-orange-500 hover:bg-orange-600 text-white border-orange-600' 
-                : '!bg-gray-200 !text-gray-400 !border-gray-200 cursor-not-allowed'
-            ]"
-          >
-            Invia Richiesta
-          </UButton>
-
-        </form>
+        </div>
       </div>
-    </div>
+    </Teleport>
 
   </section>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-import productsData from '~/content/products.json';
+import { ref, onMounted } from 'vue';
+import { supabase } from '~/supabase.js';
 
 // CONFIGURAZIONE
 const vintedProfileUrl = "https://www.vinted.it/member/3133809858"; 
+const whatsappNumber = "393403336499"; // Sostituisci col numero corretto
 
-// STATO
-const products = ref(productsData);
+// STATO DATI
+const products = ref([]);
+const fetchLoading = ref(true);
+
+// STATO MODALE
 const showModal = ref(false);
 const selectedProduct = ref(null);
-const loading = ref(false);
-const status = ref({ type: '', message: '' });
+const emailCopied = ref(false);
 
-// REFS FORM
-const formName = ref('');
-const formEmail = ref('');
-const formNotes = ref('');
+// RECUPERO DATI DAL DB
+const getProducts = async () => {
+  try {
+    fetchLoading.value = true;
+    
+    let { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .order('id'); 
 
-// VALIDAZIONE
-const isValidEmail = (email) => {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (error) throw error;
+    products.value = data || [];
+  } catch (e) {
+    console.error('Errore caricamento prodotti:', e);
+  } finally {
+    fetchLoading.value = false;
+  }
 };
-
-const isFormValid = computed(() => {
-  return formName.value.length > 0 && 
-         isValidEmail(formEmail.value) && 
-         formNotes.value.length > 0;
-});
 
 // GESTIONE MODALE
 const openOrderModal = (product) => {
   selectedProduct.value = product;
-  status.value = { type: '', message: '' };
+  emailCopied.value = false;
   showModal.value = true;
 };
 
 const closeModal = () => {
   showModal.value = false;
-  setTimeout(() => {
-    formName.value = '';
-    formEmail.value = '';
-    formNotes.value = '';
-    status.value = { type: '', message: '' };
-  }, 300);
+  selectedProduct.value = null;
 };
 
-// INVIO FORM
-const submitRequest = async () => {
-  loading.value = true;
-  status.value = { type: '', message: '' };
-
+// FUNZIONE COPIA EMAIL
+const copyEmail = async () => {
   try {
-    const response = await fetch("https://formsubmit.co/ajax/beachvolleytirreniacademy@gmail.com", {
-      method: "POST",
-      headers: { 
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-      },
-      body: JSON.stringify({
-        // MODIFICA QUI: Oggetto generico per evitare ripetizioni visive
-        _subject: `Nuova Richiesta Ordine Shop BVTA`,
-        Prodotto: selectedProduct.value.name,
-        Prezzo: selectedProduct.value.price,
-        Cliente: formName.value,
-        Email: formEmail.value,
-        Note_Taglia: formNotes.value
-      })
-    });
-
-    if (response.ok) {
-      status.value = { 
-        type: 'success', 
-        message: 'Grazie! Richiesta inviata. Ti risponderemo presto via email.' 
-      };
-      
-      formName.value = '';
-      formEmail.value = '';
-      formNotes.value = '';
-      
-      setTimeout(() => {
-        closeModal();
-      }, 3000);
-    } else {
-      throw new Error('Errore server');
-    }
-
-  } catch (error) {
-    status.value = { 
-      type: 'error', 
-      message: 'Si è verificato un errore. Per favore riprova o contattaci direttamente.' 
-    };
-  } finally {
-    loading.value = false;
+    await navigator.clipboard.writeText('beachvolleytirreniacademy@gmail.com');
+    emailCopied.value = true;
+    setTimeout(() => {
+      emailCopied.value = false;
+    }, 3000);
+  } catch (err) {
+    alert('Email: beachvolleytirreniacademy@gmail.com');
   }
 };
+
+// FUNZIONE LINK WHATSAPP DINAMICO
+const getWhatsappLink = () => {
+  if (!selectedProduct.value) return "#";
+  
+  const text = `Ciao! Vorrei ordinare questo prodotto: ${selectedProduct.value.name} (${selectedProduct.value.price}).`;
+  return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
+};
+
+onMounted(() => {
+  getProducts();
+});
 </script>
 
 <style scoped>

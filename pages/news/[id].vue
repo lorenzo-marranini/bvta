@@ -2,7 +2,7 @@
   <Main>
     <div class="pt-32 pb-20 bg-gray-50 min-h-screen">
       
-      <UContainer v-if="article" class="max-w-3xl mx-auto">
+      <UContainer class="max-w-3xl mx-auto">
         
         <div class="mb-8">
           <UButton 
@@ -10,12 +10,30 @@
             variant="ghost" 
             icon="i-heroicons-arrow-left"
             class="-ml-3 text-orange-500 hover:text-orange-600 hover:bg-orange-50"
-            >
+          >
             Torna alle News
           </UButton>
         </div>
 
-        <article class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div v-if="loading" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden animate-pulse">
+          <div class="h-64 md:h-96 w-full bg-gray-200"></div>
+          <div class="p-8 md:p-12 space-y-6">
+            <div class="h-4 bg-gray-200 rounded w-1/4"></div>
+            <div class="h-8 bg-gray-200 rounded w-3/4"></div>
+            <div class="h-8 bg-gray-200 rounded w-1/2"></div>
+            <div class="space-y-3 pt-4">
+              <div class="h-4 bg-gray-200 rounded w-full"></div>
+              <div class="h-4 bg-gray-200 rounded w-full"></div>
+              <div class="h-4 bg-gray-200 rounded w-5/6"></div>
+              <div class="h-4 bg-gray-200 rounded w-full"></div>
+            </div>
+          </div>
+        </div>
+
+        <article 
+          v-else-if="article" 
+          class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
+        >
           
           <div v-if="article.image" class="h-64 md:h-96 w-full relative bg-gray-100">
             <img 
@@ -52,12 +70,15 @@
 
         </article>
 
-      </UContainer>
+        <div v-else class="text-center py-20">
+          <div class="bg-gray-100 p-6 rounded-full inline-block mb-6">
+            <UIcon name="i-heroicons-document-magnifying-glass" class="w-12 h-12 text-gray-400" />
+          </div>
+          <h2 class="text-2xl font-bold text-gray-800 mb-4">Articolo non trovato</h2>
+          <p class="text-gray-600 mb-8">Sembra che la notizia che cerchi non esista o sia stata rimossa.</p>
+          <UButton to="/news" color="primary" size="lg">Torna all'elenco</UButton>
+        </div>
 
-      <UContainer v-else class="max-w-4xl mx-auto text-center py-20">
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">Articolo non trovato</h2>
-        <p class="text-gray-600 mb-8">Sembra che la notizia che cerchi non esista o sia stata rimossa.</p>
-        <UButton to="/news" color="primary" size="lg">Torna all'elenco</UButton>
       </UContainer>
 
     </div>
@@ -65,23 +86,53 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import Main from "@/components/layout/Main.vue";
-import newsData from '~/content/news.json';
+import { supabase } from '~/supabase.js';
 
 const route = useRoute();
 const articleId = route.params.id; 
 
-const article = newsData.articles.find(a => a.id == articleId);
+const article = ref(null);
+const loading = ref(true);
+
+const getArticle = async () => {
+  try {
+    loading.value = true;
+    
+    // Scarica la singola riga dalla tabella 'news' dove id corrisponde
+    let { data, error } = await supabase
+      .from('news')
+      .select('*')
+      .eq('id', articleId)
+      .single(); // .single() è importante: ci restituisce un oggetto {}, non un array []
+
+    if (error) throw error;
+    
+    article.value = data;
+
+  } catch (error) {
+    console.error('Errore recupero articolo:', error.message);
+    article.value = null; // Assicura che mostri lo stato "Non trovato"
+  } finally {
+    loading.value = false;
+  }
+};
 
 const formatDate = (dateString) => {
   if (!dateString) return '';
   const options = { day: 'numeric', month: 'long', year: 'numeric' };
   return new Date(dateString).toLocaleDateString('it-IT', options);
 };
+
+onMounted(() => {
+  getArticle();
+});
 </script>
 
 <style scoped>
+/* Stili per il contenuto HTML iniettato tramite v-html (rich text) */
 :deep(.prose p) {
   margin-bottom: 1.5rem;
 }
@@ -89,7 +140,7 @@ const formatDate = (dateString) => {
   color: #111827;
   font-weight: 700;
 }
-:deep(.prose h3) {
+:deep(.prose h2), :deep(.prose h3) {
   font-size: 1.5rem;
   font-weight: 700;
   margin-top: 2rem;
@@ -98,6 +149,11 @@ const formatDate = (dateString) => {
 }
 :deep(.prose ul) {
   list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+:deep(.prose ol) {
+  list-style-type: decimal;
   padding-left: 1.5rem;
   margin-bottom: 1.5rem;
 }

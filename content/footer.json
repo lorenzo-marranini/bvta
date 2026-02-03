@@ -12,7 +12,7 @@
         },
         { 
             "label": "Email", 
-            "path": "mailto:beachvolleytirreniacademy@gmail.com?subject=Richiesta%20Info",
+            "path": "beachvolleytirreniacademy@gmail.com",
             "icon": "i-simple-icons-gmail"
         }
     ]
