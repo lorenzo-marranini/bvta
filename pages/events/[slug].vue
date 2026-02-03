@@ -1,30 +1,49 @@
 <template>
   <Main>
-    <div v-if="event" class="pt-32 pb-16 min-h-screen bg-gray-50">
-      <UContainer>
+    <div class="pt-32 pb-20 min-h-screen bg-gray-50">
+      
+      <UContainer v-if="loading">
+        <div class="animate-pulse">
+          <div class="h-8 w-32 bg-gray-200 rounded mb-8"></div>
+          <div class="bg-white rounded-2xl shadow-xl overflow-hidden max-w-5xl mx-auto">
+            <div class="h-64 md:h-[500px] w-full bg-gray-300"></div>
+            <div class="p-10 space-y-6">
+              <div class="h-8 bg-gray-200 rounded w-1/2"></div>
+              <div class="h-4 bg-gray-200 rounded w-full"></div>
+              <div class="h-4 bg-gray-200 rounded w-full"></div>
+            </div>
+          </div>
+        </div>
+      </UContainer>
+
+      <UContainer v-else-if="event">
         
         <NuxtLink 
-          :to="'/events'" 
+          :to="'/'" 
           class="inline-flex items-center text-gray-500 hover:text-primary mb-8 transition-colors font-medium"
         >
           <UIcon name="i-heroicons-arrow-left" class="mr-2" />
-          {{'Torna agli Eventi'}}
+          Torna alla Home
         </NuxtLink>
 
         <div class="bg-white rounded-2xl shadow-xl overflow-hidden max-w-5xl mx-auto">
           
           <div class="relative h-64 md:h-[500px] w-full group">
             <img 
-              :src="event.imageUrl" 
+              :src="event.image_url || 'https://placehold.co/1200x800?text=BVTA'" 
               :alt="event.title" 
               class="w-full h-full object-cover transition-transform duration-700"
             />
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+            
             <div class="absolute bottom-0 left-0 p-6 md:p-10 text-white w-full">
               <div v-if="isPastEvent" class="inline-block px-3 py-1 bg-primary text-white text-xs font-bold rounded-full mb-3 uppercase tracking-wider">
                 Evento Concluso
               </div>
-              <h1 class="text-3xl md:text-5xl font-bold mb-2 leading-tight shadow-sm">{{ event.title }}</h1>
+              
+              <h1 class="text-3xl md:text-5xl font-bold mb-2 leading-tight shadow-sm">
+                {{ event.title }}
+              </h1>
             </div>
           </div>
 
@@ -34,75 +53,85 @@
               <div class="md:col-span-2 space-y-8">
                 <div>
                   <h3 class="text-xl font-bold text-gray-900 mb-4 border-b pb-2">Dettagli Evento</h3>
-                  <p class="text-gray-600 leading-relaxed text-lg">
+                  <div class="text-gray-600 leading-relaxed text-lg whitespace-pre-line">
                     {{ event.description }}
-                  </p>
+                  </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  
                   <div class="flex items-start p-4 bg-gray-50 rounded-xl">
                     <div class="bg-white p-2 rounded-lg shadow-sm mr-4 text-primary">
                       <UIcon name="i-heroicons-calendar" class="w-6 h-6" />
                     </div>
                     <div>
                       <span class="block text-sm text-gray-500 font-medium">Quando</span>
-                      <span class="block text-gray-900 font-bold">{{ event.date }}</span>
+                      <span class="block text-gray-900 font-bold capitalize">
+                        {{ formatEventDates(event.start_date, event.end_date) }}
+                      </span>
                     </div>
                   </div>
+
                   <div class="flex items-start p-4 bg-gray-50 rounded-xl">
                     <div class="bg-white p-2 rounded-lg shadow-sm mr-4 text-primary">
                       <UIcon name="i-heroicons-map-pin" class="w-6 h-6" />
                     </div>
                     <div>
                       <span class="block text-sm text-gray-500 font-medium">Dove</span>
-                      <span class="block text-gray-900 font-bold">{{ event.location }}</span>
+                      <a 
+                        v-if="event.locations && event.locations.map_link"
+                        :href="event.locations.map_link"
+                        target="_blank"
+                        class="block text-gray-900 font-bold hover:text-primary hover:underline"
+                      >
+                        {{ event.locations.name }}
+                      </a>
+                      <span v-else class="block text-gray-900 font-bold">
+                        {{ event.locations ? event.locations.name : 'Location da definire' }}
+                      </span>
                     </div>
                   </div>
+
                   <div class="flex items-start p-4 bg-gray-50 rounded-xl sm:col-span-2 md:col-span-1 lg:col-span-2">
                     <div class="bg-white p-2 rounded-lg shadow-sm mr-4 text-primary">
-                      <UIcon name="i-heroicons-user-group" class="w-6 h-6" />
+                      <UIcon name="i-heroicons-tag" class="w-6 h-6" />
                     </div>
                     <div>
                       <span class="block text-sm text-gray-500 font-medium">Categoria</span>
-                      <span class="block text-gray-900 font-bold">{{ event.category }}</span>
+                      <span class="block text-gray-900 font-bold ">{{ event.category || 'Open' }}</span>
                     </div>
                   </div>
+
                 </div>
 
-                <div v-if="isPastEvent && event.galleryImages && event.galleryImages.length > 0" class="mt-8 pt-8 border-t border-gray-100">
-                  <h3 class="text-xl font-bold text-gray-900 mb-4">I momenti migliori</h3>
-                  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                    <div 
-                      v-for="(img, index) in event.galleryImages" 
-                      :key="index"
-                      class="aspect-square rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-                    >
-                      <img :src="img" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500" />
-                    </div>
-                  </div>
-                </div>
               </div>
 
               <div class="md:col-span-1">
                 <div class="bg-white border border-gray-200 p-6 rounded-2xl shadow-sm sticky top-24">
                   
                   <div v-if="isPastEvent">
-                    <h3 class="text-lg font-bold text-gray-900 mb-2">Rivivi l'evento</h3>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">Evento Concluso</h3>
                     <p class="text-sm text-gray-500 mb-6">
-                      Sfoglia l'album completo con tutte le foto ufficiali del torneo.
+                      Questo evento è terminato. 
+                      <span v-if="event.external_gallery_link">Guarda le foto ufficiali!</span>
                     </p>
+                    
                     <UButton
-                      :to="event.externalGalleryLink"
+                      v-if="event.external_gallery_link"
+                      :to="event.external_gallery_link"
                       target="_blank"
                       size="xl"
                       block
                       color="gray"
                       variant="solid"
-                      class="text-white bg-primary  font-bold hover:bg-primary-dark hover:text-white transition-colors duration-300"
+                      class="text-white bg-primary font-bold hover:bg-primary-dark transition-colors duration-300"
                       icon="i-heroicons-photo"
                     >
-                      GALLERY COMPLETA
+                      VAI ALLA GALLERY
                     </UButton>
+                    <div v-else class="text-center p-4 bg-gray-50 rounded-lg text-gray-400 text-sm italic">
+                      Gallery non disponibile
+                    </div>
                   </div>
 
                   <div v-else>
@@ -111,14 +140,14 @@
                     </h3>
                     <p class="text-sm text-gray-500 mb-6">
                       {{ event.type === 'camp' 
-                          ? 'Per iscriversi compilare il seguente modulo' 
-                          : "Per iscriversi accedere tramite l'app Dink o clicca sotto." 
+                          ? 'Per iscriversi compilare il modulo o contattaci.' 
+                          : "Iscriviti subito tramite l'App Dink o cliccando qui sotto." 
                       }}
                     </p>
                     
                     <UButton
-                      v-if="event.signupLink"
-                      :to="event.signupLink"
+                      v-if="event.signup_link"
+                      :to="event.signup_link"
                       target="_blank"
                       size="xl"
                       block
@@ -130,13 +159,14 @@
                     </UButton>
 
                     <div v-else class="text-center p-4 bg-gray-100 rounded-lg text-gray-500 font-medium">
-                      Iscrizioni non disponibili
+                      Iscrizioni a breve
+                    </div>
+
+                    <div class="mt-4 text-center">
+                      <p class="text-xs text-gray-400">Hai dubbi? <a href="/#contact" class="text-primary hover:underline">Contattaci</a></p>
                     </div>
                   </div>
 
-                  <div class="mt-4 text-center">
-                    <p class="text-xs text-gray-400">Hai dubbi? <a href="/#contact" class="text-primary hover:underline">Contattaci</a></p>
-                  </div>
                 </div>
               </div>
 
@@ -144,41 +174,85 @@
           </div>
         </div>
       </UContainer>
-    </div>
 
-    <div v-else class="pt-32 text-center min-h-screen bg-gray-50 flex flex-col items-center justify-center">
-      <h1 class="text-4xl font-bold text-gray-300 mb-4">404</h1>
-      <h2 class="text-2xl font-bold text-gray-800 mb-2">Evento non trovato</h2>
-      <UButton to="/events/index" color="primary" variant="solid">Torna agli eventi</UButton>
+      <div v-else class="pt-32 text-center min-h-screen bg-gray-50 flex flex-col items-center justify-center">
+        <h1 class="text-4xl font-bold text-gray-300 mb-4">404</h1>
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">Evento non trovato</h2>
+        <p class="text-gray-500 mb-6">Controlla l'indirizzo o torna alla lista eventi.</p>
+        <UButton to="/" color="primary" variant="solid">Torna alla Home</UButton>
+      </div>
+
     </div>
   </Main>
 </template>
 
 <script setup>
-import { useRoute } from 'vue-router'
-import { computed } from 'vue'
+import { ref, onMounted, computed } from 'vue';
+import { useRoute } from 'vue-router';
 import Main from "@/components/layout/Main.vue";
+import { supabase } from '~/supabase.js';
 
-// IMPORTIAMO ENTRAMBI I FILE DATI
-import upcomingEventsData from '~/content/events.json'
-import pastEventsData from '~/content/pastEvents.json'
+const route = useRoute();
+const currentSlug = route.params.slug; 
 
-const route = useRoute()
-const currentSlug = route.params.slug
+const event = ref(null);
+const loading = ref(true);
 
-// LOGICA UNIFICATA:
-// 1. Cerca prima negli eventi futuri
-let foundEvent = upcomingEventsData.events.find(e => e.slug === currentSlug)
-let isPast = false
+const isPastEvent = computed(() => {
+  if (!event.value || !event.value.end_date) return false;
+  const today = new Date().toISOString().split('T')[0];
+  return event.value.end_date < today;
+});
 
-// 2. Se non lo trova, cerca negli eventi passati
-if (!foundEvent) {
-  foundEvent = pastEventsData.events.find(e => e.slug === currentSlug)
-  if (foundEvent) {
-    isPast = true
+const getEvent = async () => {
+  try {
+    loading.value = true;
+
+    // Assicurati che 'category' sia presente nella select
+    let { data, error } = await supabase
+      .from('events')
+      .select(`
+        *,
+        locations (
+          name,
+          address,
+          map_link
+        )
+      `)
+      .eq('slug', currentSlug)
+      .single();
+
+    if (error) throw error;
+    event.value = data;
+
+  } catch (error) {
+    console.error('Errore recupero evento:', error.message);
+    event.value = null;
+  } finally {
+    loading.value = false;
   }
-}
+};
 
-const event = foundEvent
-const isPastEvent = isPast
+const formatEventDates = (startStr, endStr) => {
+  if (!startStr) return '';
+  const start = new Date(startStr);
+  const end = endStr ? new Date(endStr) : new Date(startStr);
+  const optionsMonth = { month: 'long' };
+  const cap = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+  const getMonth = (d) => cap(d.toLocaleDateString('it-IT', optionsMonth));
+  const getDay = (d) => d.getDate();
+  const getYear = (d) => d.getFullYear();
+
+  if (start.getTime() === end.getTime()) {
+    return `${getDay(start)} ${getMonth(start)} ${getYear(start)}`;
+  }
+  if (start.getMonth() === end.getMonth() && start.getFullYear() === end.getFullYear()) {
+    return `${getDay(start)}-${getDay(end)} ${getMonth(start)} ${getYear(start)}`;
+  }
+  return `${getDay(start)} ${getMonth(start)} - ${getDay(end)} ${getMonth(end)} ${getYear(end)}`;
+};
+
+onMounted(() => {
+  getEvent();
+});
 </script>

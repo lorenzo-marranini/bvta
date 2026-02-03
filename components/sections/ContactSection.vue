@@ -7,38 +7,48 @@
           <h2 class="text-4xl font-bold text-primary mb-4">
             Contattaci
           </h2>
-          <p class="text-xl text-gray-600">
+          <p class="text-xl text-gray-300">
             Siamo qui per aiutarti. Scegli il canale che preferisci.
           </p>
         </div>
 
         <div class="grid md:grid-cols-2 gap-6">
           
-          <a 
-            href="mailto:beachvolleytirreniacademy@gmail.com?subject=Richiesta%20Info" 
+          <div 
+            @click="copyEmail"
             class="group bg-white p-6 rounded-xl shadow-md border border-gray-100 flex items-center transition-all duration-200 hover:shadow-xl hover:-translate-y-1 hover:border-primary/30 cursor-pointer"
           >
-            <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center flex-shrink-0 mr-5 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-200">
+            <div 
+              class="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 mr-5 transition-colors duration-200"
+              :class="emailCopied ? 'bg-green-100 text-green-600' : 'bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white'"
+            >
               <UIcon
-                name="i-heroicons-envelope"
+                :name="emailCopied ? 'i-heroicons-check' : 'i-heroicons-envelope'"
                 class="w-7 h-7"
               />
             </div>
             
             <div class="flex-grow">
-              <h3 class="text-lg font-bold text-gray-800 mb-1 group-hover:text-blue-600 transition-colors">
-                Scrivici una mail!
+              <h3 
+                class="text-lg font-bold text-gray-800 mb-1 transition-colors"
+                :class="emailCopied ? 'text-green-600' : 'group-hover:text-blue-600'"
+              >
+                {{ emailCopied ? 'Indirizzo Copiato!' : 'Scrivici una mail!' }}
               </h3>
               <p class="text-sm text-gray-500 font-medium break-all sm:break-normal">
-                beachvolleytirreniacademy@gmail.com
+                {{ emailCopied ? 'Incolla dove preferisci' : 'beachvolleytirreniacademy@gmail.com' }}
               </p>
             </div>
             
-            <UIcon name="i-heroicons-arrow-right" class="w-5 h-5 text-gray-300 group-hover:text-blue-600 transition-colors opacity-0 group-hover:opacity-100 transform translate-x-[-10px] group-hover:translate-x-0 duration-200" />
-          </a>
+            <UIcon 
+              :name="emailCopied ? 'i-heroicons-clipboard-document-check' : 'i-heroicons-document-duplicate'" 
+              class="w-5 h-5 text-gray-300 transition-all duration-200"
+              :class="emailCopied ? 'opacity-100 text-green-500' : 'opacity-0 group-hover:opacity-100 group-hover:text-blue-600 transform translate-x-[-10px] group-hover:translate-x-0'"
+            />
+          </div>
 
           <a 
-            href="https://www.instagram.com/_beachvolleytirreniaacademy/" 
+            href="https://www.instagram.com/_beachvolleytirreniacademy/" 
             target="_blank"
             class="group bg-white p-6 rounded-xl shadow-md border border-gray-100 flex items-center transition-all duration-200 hover:shadow-xl hover:-translate-y-1 hover:border-pink-500/30 cursor-pointer"
           >
@@ -68,11 +78,32 @@
 </template>
 
 <script setup>
-// Nessuno script necessario per le animazioni, tutto gestito via CSS
+import { ref } from 'vue';
+
+const emailCopied = ref(false);
+
+const copyEmail = async () => {
+  try {
+    // Copia negli appunti
+    await navigator.clipboard.writeText('beachvolleytirreniacademy@gmail.com');
+    
+    // Attiva lo stato "Copiato"
+    emailCopied.value = true;
+    
+    // Resetta dopo 3 secondi
+    setTimeout(() => {
+      emailCopied.value = false;
+    }, 3000);
+    
+  } catch (err) {
+    console.error('Errore copia:', err);
+    // Fallback semplice
+    alert('Email: beachvolleytirreniacademy@gmail.com');
+  }
+};
 </script>
 
 <style scoped>
-/* Animazione CSS semplice e istantanea all'apertura */
 .animate-fade-in {
   animation: fadeIn 0.5s ease-out forwards;
 }

@@ -15,8 +15,8 @@
           :style="{ width: `${trackWidth}px` }"
         >
           <PartnerLogo
-            v-for="(partner, index) in duplicatedPartners"
-            :key="`${partner.id}-${index}`"
+            v-for="partner in duplicatedPartners"
+            :key="partner.id"
             :image-url="partner.imageUrl"
             :name="partner.name"
           />
@@ -29,7 +29,7 @@
           size="xl"
           color="primary"
           variant="solid"
-          class="font-bold text-white bg-primary hover:bg-primary-dark px-8 animate-bounce-slow"
+          class="font-bold text-white bg-primary hover:bg-primary-dark hover:text-white px-8 animate-bounce-slow"
         >
           Diventa Sponsor
         </UButton>
@@ -44,12 +44,10 @@ import { onMounted, ref, computed } from 'vue'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import PartnerLogo from '../atoms/PartnerLogo.vue'
-// IMPORTIAMO DIRETTAMENTE IL JSON AGGIORNATO
 import partnersContent from '~/content/partners.json'
 
 const content = ref(partnersContent)
 
-// Duplichiamo l'array locale per l'effetto loop
 const duplicatedPartners = computed(() => {
   return [
     ...content.value.partners, 
@@ -63,7 +61,6 @@ const trackRef = ref(null)
 const trackWidth = ref(0)
 
 onMounted(() => {
-  // Animazione Titolo
   gsap.from(titleRef.value, {
     opacity: 0,
     y: 50,
@@ -76,18 +73,16 @@ onMounted(() => {
     }
   })
 
-  // Calcolo larghezza slider
   const calculateWidth = () => {
     if (!trackRef.value) return
     const logos = trackRef.value.children
     let totalWidth = 0
     for (let logo of logos) {
-      totalWidth += logo.offsetWidth + 32 // 32 è il gap (gap-8 di tailwind)
+      totalWidth += logo.offsetWidth + 32
     }
     trackWidth.value = totalWidth - 32
   }
 
-  // Gestione caricamento immagini remote
   const images = trackRef.value ? trackRef.value.getElementsByTagName('img') : []
   let loadedImages = 0
   
@@ -134,3 +129,16 @@ onMounted(() => {
   }
 })
 </script>
+
+<style scoped>
+.partner-track {
+  will-change: transform;
+}
+.animate-bounce-slow {
+  animation: bounce 3s infinite;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+</style>

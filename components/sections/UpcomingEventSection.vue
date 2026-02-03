@@ -19,7 +19,7 @@
       <div v-else-if="content.events && content.events.length > 0" ref="cardsRef" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <div v-for="event in content.events" :key="event.id" class="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-100 hover:border-primary transition-colors duration-300 group">
           <img 
-            :src="event.image_url || 'https://placehold.co/600x400?text=Beach+Volley'" 
+            :src="event.image_url || 'https://placehold.co/600x400?text=BVTA'" 
             :alt="event.title"
             class="w-full h-64 sm:h-72 object-cover object-top transition-transform duration-700 group-hover:scale-105"
           />

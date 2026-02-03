@@ -46,10 +46,10 @@
                 block
                 color="primary"
                 variant="solid"
-                class="w-full bg-primary text-white hover:bg-primary-dark hover:text-white transition-colors duration-300"
+                class="w-full bg-primary text-white hover:bg-primary-dark hover:text-white transition-colors duration-300 shadow-lg hover:shadow-primary/30"
               >
-                <span class="mr-2">Richiedi Pacchetto Sponsor</span>
-                <UIcon name="i-heroicons-paper-airplane" />
+                <span class="mr-2">Parla con il Responsabile Sponsor</span>
+                <UIcon name="i-heroicons-chat-bubble-left-right" />
               </UButton>
             </div>
           </div>
@@ -65,119 +65,71 @@
           @click="closeModal"
         ></div>
 
-        <div class="relative w-full max-w-2xl bg-white rounded-xl shadow-2xl flex flex-col max-h-[90vh]">
+        <div class="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-fade-in-up">
           
-          <div class="flex items-center justify-between p-6 border-b border-gray-100">
+          <div class="bg-gray-50 p-6 border-b border-gray-100 flex justify-between items-center">
             <div>
-              <h3 class="text-xl font-bold text-gray-900">Richiesta Informazioni</h3>
-              <p class="text-sm text-gray-500">Compila il form per ricevere il prospetto.</p>
+              <h3 class="text-xl font-bold text-gray-900">Contattaci Direttamente</h3>
+              <p class="text-sm text-gray-500 mt-1">Scegli il canale che preferisci</p>
             </div>
             <button 
               @click="closeModal"
-              class="text-gray-400 hover:text-red-500 p-2 rounded-full hover:bg-gray-100 transition-colors"
+              class="text-gray-400 hover:text-red-500 p-2 rounded-full hover:bg-white transition-colors"
             >
               <UIcon name="i-heroicons-x-mark" class="w-6 h-6" />
             </button>
           </div>
 
-          <div class="p-6 overflow-y-auto">
+          <div class="p-8 space-y-6">
             
-            <form @submit.prevent="submitForm" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div 
+              @click="copyEmail"
+              class="flex items-center p-4 rounded-xl border-2 border-transparent bg-primary/5 hover:border-primary/30 hover:bg-primary/10 transition-all group cursor-pointer"
+            >
+              <div 
+                class="w-12 h-12 rounded-full flex items-center justify-center shadow-sm mr-4 transition-all duration-300"
+                :class="emailCopied ? 'bg-green-500 text-white scale-110' : 'bg-white text-primary group-hover:scale-110'"
+              >
+                <UIcon :name="emailCopied ? 'i-heroicons-check' : 'i-heroicons-envelope'" class="w-6 h-6" />
+              </div>
               
               <div>
-                <UFormGroup label="Nome Azienda / Attività" name="company" required>
-                  <UInput 
-                    v-model="form.company" 
-                    placeholder="Es. Mario Rossi SRL" 
-                    icon="i-heroicons-building-office" 
-                    size="lg"
-                    class="w-full"
-                  />
-                </UFormGroup>
-              </div>
-
-              <div>
-                <UFormGroup 
-                  label="Telefono" 
-                  name="phone" 
-                  required 
-                  :error="errors.phone"
-                >
-                  <UInput 
-                    v-model="form.phone" 
-                    placeholder="+393331234567" 
-                    icon="i-heroicons-phone"
-                    size="lg"
-                    class="w-full"
-                    @input="errors.phone = ''" 
-                  />
-                </UFormGroup>
-              </div>
-
-              <div>
-                <UFormGroup label="Nome Referente" name="name" required>
-                  <UInput 
-                    v-model="form.name" 
-                    placeholder="Il tuo nome" 
-                    icon="i-heroicons-user"
-                    size="lg"
-                    class="w-full"
-                  />
-                </UFormGroup>
-              </div>
-
-              <div>
-                <UFormGroup label="Email Aziendale" name="email" required>
-                  <UInput 
-                    v-model="form.email" 
-                    type="email" 
-                    placeholder="email@azienda.com" 
-                    icon="i-heroicons-envelope"
-                    size="lg"
-                    class="w-full"
-                  />
-                </UFormGroup>
-              </div>
-
-              <div class="col-span-1 sm:col-span-2 w-full">
-                <UFormGroup label="Messaggio o Richieste specifiche" name="message" class="w-full">
-                  <UTextarea 
-                    v-model="form.message" 
-                    placeholder="Sarei interessato a conoscere le opzioni per la stagione estiva..." 
-                    :rows="6"
-                    size="lg"
-                    class="w-full"
-                    :ui="{ wrapper: 'w-full' }"
-                  />
-                </UFormGroup>
-              </div>
-
-              <div class="col-span-1 sm:col-span-2 w-full" v-if="status.message">
-                <p v-if="status.type === 'success'" class="text-green-600 text-sm font-bold text-center bg-green-50 p-3 rounded-lg border border-green-100">
-                  <UIcon name="i-heroicons-check-circle" class="align-middle mr-1"/> {{ status.message }}
-                </p>
-                <p v-if="status.type === 'error'" class="text-red-600 text-sm font-bold text-center bg-red-50 p-3 rounded-lg border border-red-100">
-                  {{ status.message }}
+                <h4 class="font-bold text-gray-900">
+                  {{ emailCopied ? 'Indirizzo Copiato!' : 'Copia indirizzo Email' }}
+                </h4>
+                <p class="text-sm text-gray-600">
+                  {{ emailCopied ? 'Incolla nella tua mail preferita.' : 'beachvolleytirreniacademy@gmail.com' }}
                 </p>
               </div>
+              
+              <UIcon 
+                v-if="!emailCopied"
+                name="i-heroicons-document-duplicate" 
+                class="w-5 h-5 text-gray-400 ml-auto group-hover:text-primary group-hover:scale-110 transition-all" 
+              />
+            </div>
 
-              <div class="col-span-1 sm:col-span-2 w-full pt-2">
-                <UButton 
-                  type="submit" 
-                  block 
-                  class="w-full bg-primary text-white hover:bg-primary-dark hover:text-white transition-colors duration-300"
-                  size="xl"
-                  :loading="isLoading"
-                  :disabled="status.type === 'success'"
-                >
-                  Invia Richiesta
-                </UButton>
-                <p class="text-xs text-center text-gray-400 mt-3">
-                  Cliccando invia acconsenti al trattamento dei dati.
-                </p>
+            <a 
+              href="https://wa.me/393403336499" 
+              target="_blank"
+              class="flex items-center p-4 rounded-xl border-2 border-transparent bg-green-50 hover:border-green-200 hover:bg-green-100 transition-all group"
+            >
+              <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm text-green-600 mr-4 group-hover:scale-110 transition-transform">
+                <UIcon name="i-heroicons-chat-bubble-oval-left-ellipsis" class="w-6 h-6" />
               </div>
+              <div>
+                <h4 class="font-bold text-gray-900">Scrivici su WhatsApp</h4>
+                <p class="text-sm text-gray-600">Risposta rapida per info veloci.</p>
+              </div>
+              <UIcon name="i-heroicons-arrow-up-right" class="w-5 h-5 text-gray-400 ml-auto group-hover:text-green-600 group-hover:translate-x-1 transition-all" />
+            </a>
 
-            </form>
+          </div>
+
+          <div class="bg-gray-50 p-4 text-center border-t border-gray-100">
+            <p class="text-xs text-gray-400">
+              Saremo felici di organizzare un incontro conoscitivo.
+            </p>
           </div>
 
         </div>
@@ -192,24 +144,12 @@ import { ref } from 'vue'
 import Main from "@/components/layout/Main.vue";
 
 const isOpen = ref(false)
-const isLoading = ref(false)
-const status = ref({ type: '', message: '' })
-const errors = ref({}) // Oggetto per memorizzare gli errori di validazione
-
-const form = ref({
-  company: '',
-  name: '',
-  phone: '',
-  email: '',
-  message: '',
-  _subject: 'Nuova richiesta SPONSOR dal sito BVTA'
-})
+const emailCopied = ref(false) // Stato per gestire l'animazione di copia
 
 const openModal = () => {
   isOpen.value = true
   document.body.style.overflow = 'hidden'
-  status.value = { type: '', message: '' }
-  errors.value = {} // Reset errori all'apertura
+  emailCopied.value = false // Reset stato
 }
 
 const closeModal = () => {
@@ -217,73 +157,41 @@ const closeModal = () => {
   document.body.style.overflow = ''
 }
 
-// Funzione di Validazione Telefono
-const validatePhone = (phone) => {
-  // Regex: 
-  // ^(\+)?  -> Accetta opzionalmente un '+' all'inizio
-  // \d+     -> Poi accetta solo numeri (da 0 a 9)
-  // $       -> Fino alla fine della stringa (niente altro)
-  const phoneRegex = /^(\+)?\d+$/;
-  
-  // Controlliamo anche la lunghezza minima (es. 6 cifre)
-  if (!phone || phone.length < 6) return false;
-  
-  return phoneRegex.test(phone);
-}
-
-const submitForm = async () => {
-  // 1. Reset errori precedenti
-  errors.value = {}
-  status.value = { type: '', message: '' }
-
-  // 2. Controllo Validazione Telefono
-  // Rimuoviamo eventuali spazi vuoti per sbaglio prima e dopo
-  form.value.phone = form.value.phone.trim(); 
-
-  if (!validatePhone(form.value.phone)) {
-    errors.value.phone = "Inserisci un numero valido (solo cifre, es: +393331234567 o 3331234567)";
-    // Interrompiamo l'invio
-    return;
-  }
-
-  // 3. Se tutto ok, procediamo con l'invio
-  isLoading.value = true
-
+// Funzione "Copia negli appunti"
+const copyEmail = async () => {
   try {
-    const response = await fetch("https://formsubmit.co/ajax/beachvolleytirreniacademy@gmail.com", {
-      method: "POST",
-      headers: { 
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-      },
-      body: JSON.stringify({
-        Azienda: form.value.company,
-        Telefono: form.value.phone,
-        Referente: form.value.name,
-        Email: form.value.email,
-        Messaggio: form.value.message,
-        _subject: `Sponsor: ${form.value.company}`
-      })
-    });
-
-    if (response.ok) {
-      status.value = { 
-        type: 'success', 
-        message: 'Grazie! La richiesta è stata inviata con successo.' 
-      };
-      form.value = { company: '', name: '', phone: '', email: '', message: '' };
-      setTimeout(() => closeModal(), 3000);
-    } else {
-      throw new Error('Errore server');
-    }
-
-  } catch (error) {
-    status.value = { 
-      type: 'error', 
-      message: 'Errore durante l\'invio. Riprova o scrivi una mail.' 
-    };
-  } finally {
-    isLoading.value = false;
+    // API moderna del browser per copiare
+    await navigator.clipboard.writeText('beachvolleytirreniacademy@gmail.com');
+    
+    // Attiva l'animazione di successo
+    emailCopied.value = true;
+    
+    // Dopo 3 secondi rimette lo stato normale
+    setTimeout(() => {
+      emailCopied.value = false;
+    }, 3000);
+    
+  } catch (err) {
+    console.error('Impossibile copiare il testo: ', err);
+    // Fallback in caso di errore (es. browser vecchissimi), mostriamo un alert
+    alert('Email: beachvolleytirreniacademy@gmail.com');
   }
 }
 </script>
+
+<style scoped>
+.animate-fade-in-up {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
